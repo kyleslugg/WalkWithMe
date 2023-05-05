@@ -1,20 +1,22 @@
-//Define relevant constants
-const DATABASE = {
-  user: 'pramsey',
-  password: 'password',
-  host: 'localhost',
-  port: '5432',
-  database: 'nyc'
-};
+import query from './geodataModel';
 
 // Table to query for MVT data, and columns to
 // include in the tiles.
-const TABLE = {
-  table: 'nyc_streets',
-  srid: '26918',
-  geomColumn: 'geom',
-  attrColumns: 'gid, name, type'
-} //Get z, y, x coordinates from incoming request
+const EDGES = {
+  table: 'ways',
+  srid: '4326',
+  geomColumn: 'the_geom',
+  attrColumns: 'gid, osm_id, source, target'
+};
+
+const NODES = {
+  table: 'ways_vertices_pgr',
+  srid: '4326',
+  geomColumn: 'the_geom',
+  attrColumns: 'id, osm_id'
+};
+
+//Get z, y, x coordinates from incoming request
 `
 
     # Search REQUEST_PATH for /{z}/{x}/{y}.{format} patterns
@@ -87,6 +89,7 @@ const envelopeToSQL = (env, table = TABLE) => {
   // Materialize the bounds
   // Select the relevant geometry and clip to MVT bounds
   // Convert to MVT format
+  //Note that this uses ST_Transform to shift geometries between projections, identified by SRID
   const sql_tmpl = `with bounds as (
     select
       {$1} as geom,
