@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Map from './components/Map';
+import MapWrapper from './components/MapWrapper';
 
 //import './stylesheets/styles.css';
 
@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Map />
+        <MapWrapper />
       </div>
     );
   }

@@ -3,7 +3,12 @@ body {
   padding: 0px;
 }
 
-#map-canvas {
+.ol-mouse-position {
+  background-color: rgba(39, 39, 39, 0.384);
+  border-radius: 2px;
+  padding: 2px;
+}
+.map-container {
   height: 100vh;
   width: 100vw;
   margin: 0px;
