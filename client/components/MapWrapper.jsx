@@ -2,10 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import VectorTileSource from 'ol/source/VectorTile';
 import { toStringXY } from 'ol/coordinate';
 import XYZ from 'ol/source/XYZ';
+import MVT from 'ol/format/MVT';
+import { Fill, Stroke, Style } from 'ol/style.js';
+
 //import MousePosition from 'ol/control/MousePosition';
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
 import { fromLonLat } from 'ol/proj.js';
@@ -23,9 +26,23 @@ const MapWrapper = (props) => {
   //Recall that calling useEffect with an empty dependency array is equivalent to componentDidMount()
   useEffect(() => {
     // create and add vector source layer
-    const edgesLayer = new VectorLayer({
-      source: new VectorSource()
+    const edgesLayer = new VectorTileLayer({
+      source: new VectorTileSource({
+        format: new MVT(),
+        url: '/layers/edges/{z}/{x}/{y}.mvt'
+      }),
+      style: new Style({
+        stroke: new Stroke({
+          color: 'red',
+          width: 1000
+        }),
+        fill: new Fill({
+          color: 'blue'
+        })
+      })
     });
+
+    //const edgesLayerStyle =
 
     const startingLongLat = [-73.9358, 40.6739];
     const startingCenter = fromLonLat(startingLongLat);

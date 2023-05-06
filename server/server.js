@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const layersRouter = require('./routes/layersRouter');
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 /**
  * handle requests for static files
  */
-app.use(express.static(path.resolve(__dirname, '../client')));
+//app.use(express.static(path.resolve(__dirname, '../client')));
 
 /**
  * Serve root path
@@ -27,6 +28,11 @@ app.get('/', (req, res) => {
 app.get('/styles.css', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../client/styles.css'));
 });
+
+/**
+ * Redirect to layers router if request for layer data comes in
+ */
+app.use('/layers', layersRouter);
 
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) =>
