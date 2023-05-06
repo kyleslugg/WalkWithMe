@@ -2,12 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import VectorTileLayer from 'ol/layer/VectorTile';
-import VectorTileSource from 'ol/source/VectorTile';
 import { toStringXY } from 'ol/coordinate';
 import XYZ from 'ol/source/XYZ';
-import MVT from 'ol/format/MVT';
-import { Fill, Stroke, Style } from 'ol/style.js';
+import layers from './MapLayers';
 
 //import MousePosition from 'ol/control/MousePosition';
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
@@ -25,23 +22,6 @@ const MapWrapper = (props) => {
 
   //Recall that calling useEffect with an empty dependency array is equivalent to componentDidMount()
   useEffect(() => {
-    // create and add vector source layer
-    const edgesLayer = new VectorTileLayer({
-      source: new VectorTileSource({
-        format: new MVT(),
-        url: '/layers/edges/{z}/{x}/{y}.mvt'
-      }),
-      style: new Style({
-        stroke: new Stroke({
-          color: 'red',
-          width: 1000
-        }),
-        fill: new Fill({
-          color: 'blue'
-        })
-      })
-    });
-
     //const edgesLayerStyle =
 
     const startingLongLat = [-73.9358, 40.6739];
@@ -64,7 +44,7 @@ const MapWrapper = (props) => {
             attributions: `Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.`
           })
         }),
-        edgesLayer
+        layers.nyccsl
       ],
       view: new View({
         projection: 'EPSG:3857', //Standard web map projection -- used by GMaps, also called Google Mercator

@@ -1,11 +1,11 @@
 const path = require('path');
 const express = require('express');
-const mvtController = require('../controllers/mvtController');
+const layerExtentsController = require('../controllers/layerExtentsController');
 const router = new express.Router();
 
 router.get(
   '/:tableid/:z/:x/:y.mvt',
-  mvtController.getTilesForCoords,
+  layerExtentsController.getVectorTilesForCoords,
   (req, res) => {
     console.log('Back in final middleware...');
     res
