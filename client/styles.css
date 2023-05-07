@@ -15,3 +15,26 @@ body {
   padding: 0px;
   position: relative;
 }
+
+/*Styling Controls*/
+
+.ol-overlayer-stopevent {
+  width: 25%;
+  background-color: aquamarine;
+  fill: aqua;
+}
+
+.layer-switcher {
+}
+
+.ol-zoom {
+}
+
+.ol-rotate {
+}
+
+.ol-attribution {
+}
+
+.ol-mouse-position {
+}

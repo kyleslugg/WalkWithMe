@@ -1,21 +1,32 @@
-import React, { Component } from 'react';
-import MapWrapper from './components/MapWrapper';
+import React, { useState } from 'react';
+import MapWrapper from './components/Map/MapWrapper';
+import Layers from './components/Map/Layers/LayersContainer';
+import { fromLonLat, get } from 'ol/proj.js';
+import MapControls from './components/Map/Controls/MapControls';
 
 //import './stylesheets/styles.css';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+const App = (props) => {
+  //Set center and starting point
+  const startingLongLat = [-73.9358, 40.6739];
+  const [center, setCenter] = useState(startingLongLat);
+  const startingCenter = fromLonLat(center);
 
-  render() {
-    return (
-      <div>
-        <MapWrapper />
-      </div>
-    );
-  }
-}
+  //Set default zoom
+  const [zoom, setZoom] = useState(14);
+
+  //Leaving out layer toggles for now, but they would be as such:
+  //const [showLayer1, setShowLayer1] = useState(true);
+
+  return (
+    <div>
+      <MapWrapper center={startingCenter} zoom={zoom}>
+        <Layers />
+        <MapControls />
+      </MapWrapper>
+    </div>
+  );
+};
 
 export default App;
 

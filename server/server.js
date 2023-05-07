@@ -29,6 +29,10 @@ app.get('/styles.css', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../client/styles.css'));
 });
 
+app.get('/ol.css', (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, '../client/ol.css'));
+});
+
 /**
  * Redirect to layers router if request for layer data comes in
  */
