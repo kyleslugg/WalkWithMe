@@ -83,10 +83,15 @@ layers.nyccsl = (
   <VectorTileLayer
     source={sources.nyccsl}
     style={styles.nyccsl}
-    options={{ minZoom: 14 }}
+    options={{ minZoom: 14, title: 'Street Centerlines' }}
   />
 );
-layers.stamenTerrain = <TileLayer source={sources.stamenTerrain} />;
+layers.stamenTerrain = (
+  <TileLayer
+    source={sources.stamenTerrain}
+    options={{ title: 'Stamen Terrain', type: 'base' }}
+  />
+);
 
 const LayerSpecs = [layers.stamenTerrain, layers.nyccsl];
 

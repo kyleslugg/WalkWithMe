@@ -1,8 +1,5 @@
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
-import LayerSwitcher, {
-  BaseLayerOptions,
-  GroupLayerOptions
-} from 'ol-layerswitcher';
+import LayerSwitcher from 'ol-layerswitcher';
 import React, { useContext, useEffect } from 'react';
 import MapContext from '../MapContext';
 import { toStringXY } from 'ol/coordinate';
@@ -15,8 +12,8 @@ const MapControls = (props) => {
   });
 
   const controls = [
-    new Zoom(),
-    new Rotate(),
+    //new Zoom(),
+    //new Rotate(),
     new Attribution(),
     new MousePosition({
       coordinateFormat: toStringXY
@@ -26,9 +23,17 @@ const MapControls = (props) => {
 
   useEffect(() => {
     if (!map) return;
+
     for (const control of controls) {
       map.controls.push(control);
     }
+
+    LayerSwitcher.renderPanel(
+      map,
+      document.querySelector('#layerSelectorHolder')
+    );
+
+    console.log(map.controls);
 
     return () => {
       for (const control of controls) {
