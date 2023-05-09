@@ -1,6 +1,9 @@
 const path = require('path');
 const express = require('express');
 const layersRouter = require('./routes/layersRouter');
+const geocodeRouter = require('./routes/geocodeRouter');
+
+require('dotenv').config();
 
 const app = express();
 
@@ -21,22 +24,29 @@ app.use(express.urlencoded({ extended: true }));
  * Serve root path
  */
 
-app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use('/', express.static(path.join(__dirname, '../dist')));
 
-app.get('/styles.css', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../client/styles.css'));
-});
-
-app.get('/ol.css', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../client/ol.css'));
-});
+  app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+} else {
+  app.use('/', express.static(path.join(__dirname, '../client')));
+  app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
+  });
+}
 
 /**
  * Redirect to layers router if request for layer data comes in
  */
 app.use('/layers', layersRouter);
+
+/**
+ * Handle geolocation lookups from geocodeController
+ */
+
+app.use('/geocode', geocodeRouter);
 
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) =>

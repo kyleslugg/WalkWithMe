@@ -112,10 +112,10 @@ groups.basemaps = [layers.stamenTerrain];
 groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
 
 const LayerSpecs = [
-  <LayerGroup properties={{ title: 'Roads and Intersections', fold: 'open' }}>
+  ...groups.basemaps,
+  <LayerGroup properties={{ title: 'Roads and Intersections', fold: 'closed' }}>
     {groups.featureLayers}
-  </LayerGroup>,
-  ...groups.basemaps
+  </LayerGroup>
 ];
 
 export default LayerSpecs;

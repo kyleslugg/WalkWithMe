@@ -38,7 +38,7 @@ const MapWrapper = ({ children, zoom, center }) => {
   useEffect(() => {
     if (!map) return;
     map.getView().setCenter(center);
-  });
+  }, [center]);
 
   return (
     <MapContext.Provider value={{ map }}>

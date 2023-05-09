@@ -7,7 +7,6 @@ router.get(
   '/:tableid/:z/:x/:y.mvt',
   layerExtentsController.getVectorTilesForCoords,
   (req, res) => {
-    console.log('Back in final middleware...');
     res
       .status(200)
       .set('Content-type', 'application/vnd.mapbox-vector-tile')

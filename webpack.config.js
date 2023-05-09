@@ -13,7 +13,6 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
-  devtool: 'eval-source-map',
   mode: process.env.NODE_ENV,
   devServer: {
     host: 'localhost',
@@ -56,7 +55,16 @@ module.exports = {
       {
         test: /.(css|scss)$/,
         exclude: /node_modules/,
-        use: ['style-loader', 'css-loader']
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
       }
     ]
   },
@@ -67,6 +75,6 @@ module.exports = {
   ],
   resolve: {
     // Enable importing JS / JSX files without specifying their extension
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.mjs']
   }
 };

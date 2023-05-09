@@ -2,4 +2,5 @@ node_modules/
 kcircuit/
 server/data/
 package-lock.json
-.env
+*.env
+*.docx

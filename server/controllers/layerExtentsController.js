@@ -4,7 +4,7 @@ const controller = {};
 
 const createError = (method, log, status, message = log) => {
   return {
-    log: `Encountered error in mvtController.${method}: ${log}`,
+    log: `Encountered error in layerExtentsController.${method}: ${log}`,
     status: status,
     message: { err: message }
   };
@@ -58,7 +58,6 @@ const boundsToSql = function (tile, tab) {
 
 const sqlToPbf = async (sql, next) => {
   const result = await query(sql);
-  console.log(result.rows);
   return result.rows[0];
   //   return next(
   //     createError('sqlToPbf', 'error querying database for tile data', 500)
@@ -124,13 +123,8 @@ controller.getVectorTilesForCoords = async function (req, res, next) {
 
   //Generate SQL for geodata within envelope
   const sql = boundsToSql(tile, TABLE);
-  // console.log(sql);
 
-  //Generate imagery from geodata
-  //console.log('Awaiting results of query...');
   res.locals.pbf = await sqlToPbf(sql);
-  //console.log('Presenting res.locals.pbf...');
-  //console.dir(res.locals.pbf);
 
   return next();
 };

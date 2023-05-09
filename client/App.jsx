@@ -5,7 +5,7 @@ import Layers from './components/Map/Layers/LayersContainer';
 import { fromLonLat, get } from 'ol/proj.js';
 import MapControls from './components/Map/Controls/MapControls';
 import Locator from './components/Map/Locator';
-import './styles.scss';
+import './styles/styles.scss';
 
 //import './stylesheets/styles.css';
 
