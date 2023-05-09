@@ -1,0 +1,4 @@
+# WalkWithMe
+## *Be Open to the Unexpected*
+
+WalkWithMe is a route planner based on [POSTGIS](https://postgis.net/) and [OpenLayers](https://openlayers.org/) that is tailored to neighborhood walking paths. Coverage is currently limited to New York City, but can be expanded to additional locations with the use of OpenStreetMap feature extracts and/or locally maintained street grid geodata.
