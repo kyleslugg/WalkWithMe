@@ -17,8 +17,7 @@ const MapControls = (props) => {
     new Attribution(),
     new MousePosition({
       coordinateFormat: toStringXY
-    }),
-    layerSwitcher
+    })
   ];
 
   useEffect(() => {
@@ -30,9 +29,9 @@ const MapControls = (props) => {
 
     LayerSwitcher.renderPanel(
       map,
-      document.querySelector('#layerSelectorHolder')
+      document.querySelector('#layer-selector-holder')
     );
-
+    //layerSwitcher.setMap(map);
     console.log(map.controls);
 
     return () => {

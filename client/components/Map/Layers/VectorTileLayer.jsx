@@ -5,20 +5,27 @@ import MapContext from '../MapContext';
 const VectorTileLayer = ({ source, style = {}, zIndex = 0, options = {} }) => {
   const { map } = useContext(MapContext);
 
+  const vtLayer = new OLVectorTileLayer({
+    ...options,
+    source,
+    style,
+    zIndex
+  });
+
   useEffect(() => {
     if (!map) return;
-    const vtLayer = new OLVectorTileLayer({
-      ...options,
-      source,
-      style,
-      zIndex
-    });
 
-    map.addLayer(vtLayer);
+    if (options.addToParent) {
+      options.addToParent();
+    } else {
+      map.addLayer(vtLayer);
+    }
     vtLayer.setZIndex(zIndex);
 
     return () => {
-      if (map) {
+      if (options.removeFromParent) {
+        options.removeFromParent();
+      } else {
         map.removeLayer(vtLayer);
       }
     };

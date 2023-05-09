@@ -22,13 +22,11 @@ const App = (props) => {
   //const [showLayer1, setShowLayer1] = useState(true);
 
   return (
-    <div>
-      <MapWrapper center={startingCenter} zoom={zoom}>
-        <Layers />
-        <Locator />
-        <MapControls />
-      </MapWrapper>
-    </div>
+    <MapWrapper center={startingCenter} zoom={zoom}>
+      <Layers />
+      <Locator />
+      <MapControls />
+    </MapWrapper>
   );
 };
 

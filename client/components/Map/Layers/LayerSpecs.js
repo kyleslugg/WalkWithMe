@@ -5,6 +5,10 @@ import MVT from 'ol/format/MVT';
 import { Fill, Stroke, Style, Circle } from 'ol/style.js';
 import TileLayer from './TileLayer';
 import VectorTileLayer from './VectorTileLayer';
+import LayerGroup from './LayerGroup';
+import Layer from 'ol/layer/Layer';
+
+const groups = {};
 
 const layers = {};
 
@@ -15,7 +19,7 @@ const sources = {};
 //Define vector tile layer sources
 sources.edges = new VectorTileSource({
   format: new MVT(),
-  url: '/layers/edges/{z}/{x}/{y}.mvt'
+  url: '/layers/ways/{z}/{x}/{y}.mvt'
 });
 
 sources.nodes = new VectorTileSource({
@@ -65,18 +69,28 @@ styles.nyccsl = new Style({
 });
 
 //Compose Layers
+
+//Create basemap layer group
+
+// groups.basemaps = (
+//   <LayerGroup
+//     layers={groups.basemaps}
+//     groupName={'basemaps'}
+//     properties={{ title: 'Basemaps', type: 'base', fold: 'open' }}
+//   />
+// );
 layers.edges = (
   <VectorTileLayer
     source={sources.edges}
     style={styles.edges}
-    options={{ minZoom: 14 }}
+    options={{ minZoom: 14, visible: false, title: 'OSM Routes' }}
   />
 );
 layers.nodes = (
   <VectorTileLayer
     source={sources.nodes}
     style={styles.nodes}
-    options={{ minZoom: 14 }}
+    options={{ minZoom: 14, visible: false, title: 'OSM Nodes' }}
   />
 );
 layers.nyccsl = (
@@ -93,6 +107,15 @@ layers.stamenTerrain = (
   />
 );
 
-const LayerSpecs = [layers.stamenTerrain, layers.nyccsl];
+//Assign Layers to Groups
+groups.basemaps = [layers.stamenTerrain];
+groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
+
+const LayerSpecs = [
+  <LayerGroup properties={{ title: 'Roads and Intersections', fold: 'open' }}>
+    {groups.featureLayers}
+  </LayerGroup>,
+  ...groups.basemaps
+];
 
 export default LayerSpecs;

@@ -5,10 +5,12 @@ const Locator = (props) => {
     <div className="locator">
       <div id="addrLookup">
         <input type="text"></input>
-        <button>Search</button>
-        <button>Locate Me</button>
+        <div className="button-row">
+          <button>Search</button>
+          <button>Locate Me</button>
+        </div>
       </div>
-      <div id="layerSelectorHolder"></div>
+      <div id="layer-selector-holder"></div>
     </div>
   );
 };
