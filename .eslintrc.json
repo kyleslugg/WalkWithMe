@@ -16,7 +16,7 @@
   },
   "rules": {
     "indent": ["warn", 2],
-    "no-unused-vars": ["off", { "vars": "local" }],
+    "no-unused-vars": ["warn", { "vars": "local" }],
     "no-case-declarations": "off",
     "prefer-const": "warn",
     "quotes": ["warn", "single"],
