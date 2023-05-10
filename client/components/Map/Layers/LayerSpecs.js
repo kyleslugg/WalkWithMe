@@ -6,6 +6,7 @@ import { Fill, Stroke, Style, Circle } from 'ol/style.js';
 import TileLayer from './TileLayer';
 import VectorTileLayer from './VectorTileLayer';
 import LayerGroup from './LayerGroup';
+import Feature from 'ol/Feature';
 
 const groups = {};
 
@@ -17,17 +18,17 @@ const sources = {};
 
 //Define vector tile layer sources
 sources.edges = new VectorTileSource({
-  format: new MVT(),
+  format: new MVT({ featureClass: Feature }),
   url: '/layers/ways/{z}/{x}/{y}.mvt'
 });
 
 sources.nodes = new VectorTileSource({
-  format: new MVT(),
+  format: new MVT({ featureClass: Feature }),
   url: '/layers/ways_vertices_pgr/{z}/{x}/{y}.mvt'
 });
 
 sources.nyccsl = new VectorTileSource({
-  format: new MVT(),
+  format: new MVT({ featureClass: Feature }),
   url: '/layers/nyccsl/{z}/{x}/{y}.mvt',
   attributions:
     'Street centerlines by NYC OTI via <a href="https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b">NYC OpenData</a>'

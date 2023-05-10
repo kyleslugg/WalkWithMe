@@ -6,6 +6,7 @@ import { fromLonLat, get } from 'ol/proj.js';
 import MapControls from './components/Map/Controls/MapControls';
 import Locator from './components/Map/Locator';
 import './styles/styles.scss';
+import Collection from 'ol/Collection';
 
 //import './stylesheets/styles.css';
 
@@ -17,9 +18,6 @@ const App = (props) => {
 
   //Set default zoom
   const [zoom, setZoom] = useState(14);
-
-  //Leaving out layer toggles for now, but they would be as such:
-  //const [showLayer1, setShowLayer1] = useState(true);
 
   return (
     <MapWrapper center={startingCenter} zoom={zoom}>
