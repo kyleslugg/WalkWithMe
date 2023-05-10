@@ -38,22 +38,6 @@ const MapWrapper = ({ children, zoom, center }) => {
     return () => initialMap.setTarget(null);
   }, []);
 
-  // useEffect(() => {
-  //   if (!map) return;
-  //   map.addInteraction(selector);
-  //   //map.addInteraction(selector);
-  //   selector.on('selector', (e) => {
-  //     console.log(e);
-  //   });
-  // }, [map]);
-  //Handle zoom and position changes
-  //Zoom
-
-  // useEffect(() => {
-  //   console.log('Selection set changed');
-  //   console.log(selectionSet);
-  // }, [selectionSet]);
-
   useEffect(() => {
     if (!map) return;
     map.getView().setZoom(zoom);

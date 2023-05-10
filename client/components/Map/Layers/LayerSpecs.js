@@ -7,6 +7,7 @@ import TileLayer from './TileLayer';
 import VectorTileLayer from './VectorTileLayer';
 import LayerGroup from './LayerGroup';
 import Feature from 'ol/Feature';
+import layerIdGen from './layerIdGen';
 
 const groups = {};
 
@@ -88,6 +89,7 @@ styles.selectedLine = new Style({
 // );
 layers.edges = (
   <VectorTileLayer
+    key={layerIdGen()}
     source={sources.edges}
     style={styles.edges}
     options={{ minZoom: 14, visible: false, title: 'OSM Routes' }}
@@ -95,6 +97,7 @@ layers.edges = (
 );
 layers.nodes = (
   <VectorTileLayer
+    key={layerIdGen()}
     source={sources.nodes}
     style={styles.nodes}
     options={{ minZoom: 14, visible: false, title: 'OSM Nodes' }}
@@ -102,6 +105,7 @@ layers.nodes = (
 );
 layers.nyccsl = (
   <VectorTileLayer
+    key={layerIdGen()}
     source={sources.nyccsl}
     style={styles.nyccsl}
     options={{ minZoom: 14, title: 'Street Centerlines' }}
@@ -109,6 +113,7 @@ layers.nyccsl = (
 );
 layers.stamenTerrain = (
   <TileLayer
+    key={layerIdGen()}
     source={sources.stamenTerrain}
     options={{ title: 'Stamen Terrain', type: 'base' }}
   />
@@ -132,7 +137,10 @@ groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
 
 const LayerSpecs = [
   ...groups.basemaps,
-  <LayerGroup properties={{ title: 'Roads and Intersections', fold: 'closed' }}>
+  <LayerGroup
+    key={layerIdGen()}
+    properties={{ title: 'Roads and Intersections', fold: 'closed' }}
+  >
     {groups.featureLayers}
   </LayerGroup>
   //layers.nyccslSelection

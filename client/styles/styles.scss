@@ -78,7 +78,7 @@ body {
   .button-row {
     margin-top: 7px;
 
-    button {
+    input {
       border: none;
       width: 100%;
       font-family: inherit;
@@ -87,8 +87,17 @@ body {
 }
 
 #project-branding {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
   height: 100px;
-  background-color: cornflowerblue;
+  width: 100%;
+  background-color: $control-bar-pane-background;
+  img {
+    height: auto;
+    width: 175px;
+  }
 }
 #layers-and-legend {
   padding: 10px;

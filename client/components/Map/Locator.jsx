@@ -16,6 +16,7 @@ const Locator = (props) => {
     const [lat, long] = [position.coords.latitude, position.coords.longitude];
     console.log([lat, long]);
     map.getView().setCenter(fromLonLat([long, lat]));
+    map.getView().setZoom(16);
   };
 
   const geolocationFailure = (err) => {
@@ -47,6 +48,7 @@ const Locator = (props) => {
           const [long, lat] = [response.longitude, response.latitude];
           if (long && lat) {
             map.getView().setCenter(fromLonLat([long, lat]));
+            map.getView().setZoom(16);
           } else {
             console.log(
               'Invalid or missing coordinates on response to geocode request'
@@ -58,18 +60,36 @@ const Locator = (props) => {
         });
     }
   };
+
+  //Establish handler for enter click on button
+  const keyDownHandler = (event) => {
+    if (!event.key == 'Enter') return;
+    searchAddress();
+  };
+
   return (
     <div className="locator">
-      <div id="project-branding"></div>
+      <div id="project-branding">
+        <img src="../../assets/logo.png"></img>
+      </div>
       <div id="addr-lookup">
         <div className="text-box">
-          <input type="text" id="address-input-box"></input>
+          <input
+            type="text"
+            id="address-input-box"
+            placeholder="Enter Adddress"
+          ></input>
           <button onClick={getAndSetGeolocation}>
             <img src="../../assets/gps.png" />
           </button>
         </div>
         <div className="button-row">
-          <button onClick={searchAddress}>Search</button>
+          <input
+            type="submit"
+            value={'Search'}
+            onClick={searchAddress}
+            onKeyDown={keyDownHandler}
+          />
         </div>
       </div>
       <div id="layers-and-legend">
