@@ -6,7 +6,6 @@ import { Fill, Stroke, Style, Circle } from 'ol/style.js';
 import TileLayer from './TileLayer';
 import VectorTileLayer from './VectorTileLayer';
 import LayerGroup from './LayerGroup';
-import Layer from 'ol/layer/Layer';
 
 const groups = {};
 
@@ -68,6 +67,13 @@ styles.nyccsl = new Style({
   })
 });
 
+styles.selectedLine = new Style({
+  stroke: new Stroke({
+    color: 'yellow',
+    width: 5
+  })
+});
+
 //Compose Layers
 
 //Create basemap layer group
@@ -107,6 +113,18 @@ layers.stamenTerrain = (
   />
 );
 
+// layers.nyccslSelection = (
+//   <VectorTileSelectionLayer
+//     source={sources.nyccsl}
+//     style={styles.selectedLine}
+//     options={{
+//       minZoom: 14,
+//       renderMode: 'vector',
+//       visible: true,
+//       idField: 'id'
+//     }}
+//   />
+// );
 //Assign Layers to Groups
 groups.basemaps = [layers.stamenTerrain];
 groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
@@ -116,6 +134,7 @@ const LayerSpecs = [
   <LayerGroup properties={{ title: 'Roads and Intersections', fold: 'closed' }}>
     {groups.featureLayers}
   </LayerGroup>
+  //layers.nyccslSelection
 ];
 
-export default LayerSpecs;
+export { LayerSpecs as default, styles, groups, layers, sources };

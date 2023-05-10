@@ -4,3 +4,4 @@ server/data/
 package-lock.json
 *.env
 *.docx
+_GARBAGE_BIN/

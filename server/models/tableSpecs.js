@@ -18,7 +18,7 @@ tableSpecs.NYCCSL = {
   table: 'nyccsl',
   srid: '4326',
   geomColumn: 'geom',
-  attrColumns: 'full_stree, l_low_hn, r_low_hn'
+  attrColumns: 'id, full_stree, l_low_hn, r_low_hn'
 };
 
 module.exports = tableSpecs;

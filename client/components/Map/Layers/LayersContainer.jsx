@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import LayerSpecs from './LayerSpecs';
 
 const Layers = () => {
