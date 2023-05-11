@@ -9,12 +9,15 @@ const MapWrapper = ({ children, zoom, center }) => {
   //We will use this component to hold the state of our map, as well as
   //the pane for the map itself
   const [map, setMap] = useState(null);
+  const [selection, setSelection] = useState(null);
+
   const mapElement = useRef();
 
   //Instantiate selector, which will let us select elements
   const selector = makeSelector();
   selector.on('select', (e) => {
     onSelect(e, selector);
+    setSelection(getSelection());
   });
 
   //Import default interactions, and add selector before instantiating map
@@ -50,7 +53,7 @@ const MapWrapper = ({ children, zoom, center }) => {
   }, [center]);
 
   return (
-    <MapContext.Provider value={{ map }}>
+    <MapContext.Provider value={{ map, selection }}>
       <div ref={mapElement} className="ol-map map-container">
         {children}
       </div>

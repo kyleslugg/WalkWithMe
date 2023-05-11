@@ -25,11 +25,10 @@ app.use(express.urlencoded({ extended: true }));
  */
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/', express.static(path.join(__dirname, '../dist')));
-
   app.get('/', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
   });
+  app.use('/', express.static(path.join(__dirname, '../dist')));
 } else {
   app.use('/', express.static(path.join(__dirname, '../client')));
   app.get('/', (req, res) => {
@@ -44,7 +43,8 @@ app.use('/layers', layersRouter);
 
 /**
  * Handle geolocation lookups from geocodeController
- */
+
+*/
 
 app.use('/geocode', geocodeRouter);
 

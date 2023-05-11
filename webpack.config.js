@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: [
@@ -11,7 +12,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    clean: true
   },
   mode: process.env.NODE_ENV,
   devServer: {
@@ -56,7 +58,8 @@ module.exports = {
         test: /.(css|scss)$/,
         exclude: /node_modules/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
+          //'style-loader',
           'css-loader',
           {
             loader: 'sass-loader',
@@ -65,13 +68,27 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(png|jpg)$/i,
+        type: 'asset/resource',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024 // Inline images under 10KB
+          }
+        },
+        // Added:
+        generator: {
+          filename: 'images/[name]-[hash][ext]'
+        }
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './client/index.html'
-    })
+    }),
+    new MiniCssExtractPlugin()
   ],
   resolve: {
     // Enable importing JS / JSX files without specifying their extension

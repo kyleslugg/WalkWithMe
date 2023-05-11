@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import MapContext from './MapContext';
 import { fromLonLat, get } from 'ol/proj.js';
+import FeatureSaveLoad from './Controls/FeatureSaveLoad';
 
 const Locator = (props) => {
   const { map } = useContext(MapContext);
@@ -70,9 +71,9 @@ const Locator = (props) => {
   return (
     <div className="locator">
       <div id="project-branding">
-        <img src="../../assets/logo.png"></img>
+        <img src={require('../../assets/logo.png')}></img>
       </div>
-      <div id="addr-lookup">
+      <div id="addr-lookup" className="control-pane">
         <div className="text-box">
           <input
             type="text"
@@ -80,7 +81,7 @@ const Locator = (props) => {
             placeholder="Enter Adddress"
           ></input>
           <button onClick={getAndSetGeolocation}>
-            <img src="../../assets/gps.png" />
+            <img src={require('../../assets/gps.png')} />
           </button>
         </div>
         <div className="button-row">
@@ -92,9 +93,13 @@ const Locator = (props) => {
           />
         </div>
       </div>
-      <div id="layers-and-legend">
+      <div id="layers-and-legend" className="control-pane">
         <div className="title">Layers</div>
-        <div id="layer-selector-holder"></div>
+        <div id="layer-selector"></div>
+      </div>
+      <div id="layer-saver-functionality" className="control-pane">
+        <div className="title">Save and Load Features</div>
+        <FeatureSaveLoad />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { fromLonLat, get } from 'ol/proj.js';
 import MapControls from './components/Map/Controls/MapControls';
 import Locator from './components/Map/Locator';
 import './styles/styles.scss';
-import Collection from 'ol/Collection';
+import './styles/ol.css';
 
 //import './stylesheets/styles.css';
 

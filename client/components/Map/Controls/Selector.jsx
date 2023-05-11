@@ -2,17 +2,14 @@ import Select from 'ol/interaction/Select';
 import { click, shiftKeyOnly } from 'ol/events/condition';
 import { styles } from '../Layers/LayerSpecs';
 
-// import React, { useState, useEffect, useContext } from 'react';
-// import MapContext from '../MapContext';
-
 const selection = new Set();
 let selectionLayer;
 let idField;
 
 const defaultOptions = {
   condition: click,
-  layers: () => {
-    return true; //TODO: IMPLEMENT A FUNCTION THAT WILL FILTER FOR DESIRED LAYER FOR SELECTION
+  layers: (layer) => {
+    return layer.getProperties()['type'] != 'base'; //TODO: IMPLEMENT A FUNCTION THAT WILL FILTER FOR DESIRED LAYER FOR SELECTION
   },
 
   toggleCondition: shiftKeyOnly,
@@ -28,9 +25,22 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
   console.log(`Layer: ${selectionLayer}; ID Field: ${idField}`);
   console.log('Selection:');
   console.log(selection);
-  console.log("Selector's features collection:`");
-  console.dir(selector.getFeatures());
-  if (!e.selected.length && !e.deselected.length) return;
+  console.log('Event:`');
+  console.dir(e);
+
+  if (!e.selected.length) {
+    console.log('Empty select');
+    if (selection.size > 0) {
+      selection.forEach((element) => {
+        element.setStyle();
+        selection.delete(element);
+      });
+      selectionLayer.changed();
+      selectionLayer = null;
+      idField = null;
+    }
+    return;
+  }
 
   if (e.selected[0] && !selectionLayer) {
     selectionLayer = selector.getLayer(e.selected[0]);
@@ -51,11 +61,6 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
   for (const feature of e.selected) {
     selection.add(feature);
   }
-
-  // for (const feature of e.deselected) {
-  //   newSelection.features.delete(feature);
-  //   feature.setStyle();
-  // }
 
   selection.forEach((feature) => {
     feature.setStyle(style);

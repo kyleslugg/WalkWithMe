@@ -1,13 +1,13 @@
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
 import LayerSwitcher from 'ol-layerswitcher';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import MapContext from '../MapContext';
 import { toStringXY } from 'ol/coordinate';
 
 const MapControls = (props) => {
   const { map } = useContext(MapContext);
   const layerSwitcher = new LayerSwitcher({
-    reverse: true,
+    //reverse: true,
     groupSelectStyle: 'group'
   });
 
@@ -27,12 +27,8 @@ const MapControls = (props) => {
       map.controls.push(control);
     }
 
-    LayerSwitcher.renderPanel(
-      map,
-      document.querySelector('#layer-selector-holder')
-    );
+    LayerSwitcher.renderPanel(map, document.querySelector('#layer-selector'));
     //layerSwitcher.setMap(map);
-    console.log(map.controls);
 
     return () => {
       for (const control of controls) {

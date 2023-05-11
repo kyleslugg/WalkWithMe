@@ -1,6 +1,7 @@
-$control-bar-background: rgba(152, 152, 152, 0.651);
-$control-bar-pane-background: rgba(128, 128, 128, 0.531);
-
+$control-bar-background: rgba(138, 159, 149, 0.651);
+$control-bar-pane-background: rgba(224, 111, 70, 0.685);
+$logo-background: rgba(0, 0, 0, 0);
+$font-grey: rgb(35, 35, 35);
 * {
   box-sizing: border-box;
 }
@@ -28,6 +29,13 @@ body {
 
 /*Styling Controls*/
 
+.control-pane {
+  background-color: $control-bar-pane-background;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 5px 0px;
+}
+
 .locator {
   position: absolute;
   display: flex;
@@ -46,10 +54,6 @@ body {
 #addr-lookup {
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  margin: 5px 0px;
-  border-radius: 4px;
-  background-color: $control-bar-pane-background;
 
   .text-box {
     position: relative;
@@ -86,6 +90,20 @@ body {
   }
 }
 
+#layers-and-legend {
+  .title {
+    padding: 5px;
+    text-decoration: underline;
+    font-weight: bold;
+    color: $font-grey;
+  }
+  #layer-selector {
+    padding: 5px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
 #project-branding {
   display: flex;
   position: relative;
@@ -93,29 +111,10 @@ body {
   justify-content: center;
   height: 100px;
   width: 100%;
-  background-color: $control-bar-pane-background;
+  background-color: $logo-background;
   img {
     height: auto;
     width: 175px;
-  }
-}
-#layers-and-legend {
-  padding: 10px;
-  border-radius: 4px;
-  background-color: $control-bar-pane-background;
-  #layer-selector-holder {
-    //position: relative;
-    //top: 5%;
-    //left: 5%;
-    //max-width: fit-content;
-    //background-color: rgba(142, 142, 142, 0.195);
-
-    button {
-    }
-
-    li {
-      //white-space: wrap;
-    }
   }
 }
 

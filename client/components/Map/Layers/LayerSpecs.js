@@ -134,15 +134,22 @@ layers.stamenTerrain = (
 //Assign Layers to Groups
 groups.basemaps = [layers.stamenTerrain];
 groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
-
+//FIXME: Layers are not associated with layer groups on the map
+//Have tried passing down a callback function to add layers, but
+//no success yet. Removing layerGroup for now, but may add upon repair
 const LayerSpecs = [
   ...groups.basemaps,
-  <LayerGroup
-    key={layerIdGen()}
-    properties={{ title: 'Roads and Intersections', fold: 'closed' }}
-  >
-    {groups.featureLayers}
-  </LayerGroup>
+  ...groups.featureLayers
+  // <LayerGroup
+  //   key={layerIdGen()}
+  //   properties={{
+  //     title: 'Roads and Intersections',
+  //     fold: 'close',
+  //     combine: false
+  //   }}
+  // >
+  //   {groups.featureLayers}
+  // </LayerGroup>
   //layers.nyccslSelection
 ];
 
