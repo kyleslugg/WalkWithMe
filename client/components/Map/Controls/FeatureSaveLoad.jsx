@@ -55,19 +55,20 @@ const FeatureSaveLoad = (props) => {
         return response.json();
       })
       .then((response) => {
-        const { id, name } = response;
+        const { id, name, orig_name } = response;
         const newSavedList = [...savedGroups];
         newSavedList.push(
           <SavedFeatureGroup
             key={layerIdGen()}
             id={id}
             stdName={name}
-            displayName={groupName}
+            displayName={orig_name}
             loadFeature={makeLoadFeature(id)}
           />
         );
         showSavedSection(true);
         setSavedGroups(newSavedList);
+        document.querySelector('#addressInputForm').reset();
       })
       .catch((e) => {
         console.log(`Error: ${e}. Unable to complete feature group save.`);
@@ -93,7 +94,32 @@ const FeatureSaveLoad = (props) => {
     return featureLoader;
   };
 
+  const loadAllSaved = async () => {
+    fetch('/layers/featuregroups')
+      .then((response) => response.json())
+      .then((response) => {
+        const newSavedList = [...savedGroups];
+        for (const feature of response) {
+          const { id, name, orig_name } = feature;
+          console.log(response);
+          newSavedList.push(
+            <SavedFeatureGroup
+              key={layerIdGen()}
+              id={id}
+              stdName={name}
+              displayName={orig_name}
+              loadFeature={makeLoadFeature(id)}
+            />
+          );
+        }
+        console.log('Features loaded');
+        //showSavedSection(true);
+        setSavedGroups(newSavedList);
+      });
+  };
+
   useEffect(() => {
+    console.log(savedGroups);
     showSavedSection(savedGroups.length);
   }, [savedGroups]);
 
@@ -109,16 +135,20 @@ const FeatureSaveLoad = (props) => {
   return (
     <div id="layer-saver" className="control-pane">
       <div className="title">Save and Load Features</div>
-      <input
-        type="text"
-        placeholder="Enter name for selected feature group"
-        id="featureGroupNameInput"
-      ></input>
+      <form action="" id="addressInputForm">
+        <input
+          type="text"
+          placeholder="Enter name for selected feature group"
+          id="featureGroupNameInput"
+        ></input>
+      </form>
       <div className="button-row">
         <button className="fill-to-fit" onClick={saveSelection}>
           Save Features
         </button>
-        <button className="fill-to-fit">Load Features</button>
+        <button className="fill-to-fit" onClick={loadAllSaved}>
+          Load Features
+        </button>
       </div>
       <div id="savedFeatureGroups">
         <div className="title">Saved Feature Groups</div>

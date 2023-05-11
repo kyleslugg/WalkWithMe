@@ -16,15 +16,17 @@ const createError = (method, log, status, message = log) => {
 };
 
 featureGroupController.getAllFeatureGroups = (req, res, next) => {
-  const queryString = `select json_agg(s.geoms) 
-  from (
-    select st_asgeojson(t.*)::json as geoms 
-    from (select c.id, c.name, ST_Transform(c.geom, 3857) as geom
-    from custom_feature_groups c
-    ) t
-  ) s`;
+  // const queryString = `select json_agg(s.geoms)
+  // from (
+  //   select st_asgeojson(t.*)::json as geoms
+  //   from (select c.id, c.name, ST_Transform(c.geom, 3857) as geom
+  //   from custom_feature_groups c
+  //   ) t
+  // ) s`;
+  const queryString = 'select id, name, orig_name from custom_feature_groups';
   query(queryString).then((response) => {
-    res.locals.allCustomFeatureGroups = response.rows[0].json_agg;
+    //res.locals.allCustomFeatureGroups = response.rows[0].json_agg;
+    res.locals.allCustomFeatureGroups = response.rows;
     return next();
   });
 };
@@ -67,8 +69,8 @@ featureGroupController.saveFeatureGroup = (req, res, next) => {
   const formattedGroupName = formatGroupName(groupName);
   const queryString = `INSERT INTO ${
     tableSpecs.FEATURE_GROUPS.table
-  } (name, geom)
-  VALUES ('${formattedGroupName}', 
+  } (name, orig_name, geom)
+  VALUES ('${formattedGroupName}', '${groupName}',
     ST_Collect(
       ARRAY( 
         SELECT ${geomColumn} 
@@ -76,7 +78,7 @@ featureGroupController.saveFeatureGroup = (req, res, next) => {
         WHERE t.${idField} in (${featureIds.join(', ')})
         )
       )
-    ) RETURNING name, id`;
+    ) RETURNING name, orig_name, id`;
 
   query(queryString).then((result) => {
     res.locals.saveResult = result.rows[0];
