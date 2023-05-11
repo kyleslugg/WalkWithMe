@@ -22,11 +22,11 @@ export const makeSelector = (options = defaultOptions) => {
 };
 
 export const onSelect = (e, selector, style = styles.selectedLine) => {
-  console.log(`Layer: ${selectionLayer}; ID Field: ${idField}`);
-  console.log('Selection:');
-  console.log(selection);
-  console.log('Event:`');
-  console.dir(e);
+  // console.log(`Layer: ${selectionLayer}; ID Field: ${idField}`);
+  // console.log('Selection:');
+  // console.log(selection);
+  // console.log('Event:`');
+  // console.dir(e);
 
   if (!e.selected.length) {
     console.log('Empty select');
@@ -70,7 +70,7 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
 };
 
 export const getSelection = () => {
-  return selection;
+  return { selectionLayer, idField, selectionSet: selection };
 };
 
 /*

@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import MapContext from './MapContext';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 import { defaults } from 'ol/interaction/defaults';
 import { makeSelector, onSelect, getSelection } from './Controls/Selector';
 
@@ -23,6 +25,8 @@ const MapWrapper = ({ children, zoom, center }) => {
   //Import default interactions, and add selector before instantiating map
   const newDefaults = defaults();
   newDefaults.push(selector);
+
+  //Define source from which to load previously saved geometry groups
 
   //On Component Mount
   useEffect(() => {

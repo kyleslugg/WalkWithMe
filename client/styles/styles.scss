@@ -49,6 +49,13 @@ body {
   margin: 0px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  .title {
+    padding: 5px;
+    text-decoration: underline;
+    font-weight: bold;
+    color: $font-grey;
+  }
 }
 
 #addr-lookup {
@@ -78,30 +85,37 @@ body {
       }
     }
   }
+}
 
-  .button-row {
-    margin-top: 7px;
+.button-row {
+  margin-top: 7px;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 5px;
 
-    input {
-      border: none;
-      width: 100%;
-      font-family: inherit;
-    }
+  .full-width {
+    border: none;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  .fill-to-fit {
+    border: none;
+    font-family: inherit;
+    width: auto;
   }
 }
 
-#layers-and-legend {
-  .title {
-    padding: 5px;
-    text-decoration: underline;
-    font-weight: bold;
-    color: $font-grey;
-  }
-  #layer-selector {
-    padding: 5px;
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.25);
-  }
+#layer-saver {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+}
+
+#layer-selector {
+  padding: 5px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 #project-branding {

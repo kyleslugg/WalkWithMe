@@ -5,6 +5,7 @@ import Layers from './components/Map/Layers/LayersContainer';
 import { fromLonLat, get } from 'ol/proj.js';
 import MapControls from './components/Map/Controls/MapControls';
 import Locator from './components/Map/Locator';
+import FeatureSaveLoad from './components/Map/Controls/FeatureSaveLoad';
 import './styles/styles.scss';
 import './styles/ol.css';
 
@@ -22,7 +23,9 @@ const App = (props) => {
   return (
     <MapWrapper center={startingCenter} zoom={zoom}>
       <Layers />
-      <Locator />
+      <Locator>
+        <FeatureSaveLoad />
+      </Locator>
       <MapControls />
     </MapWrapper>
   );

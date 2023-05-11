@@ -5,9 +5,12 @@ import MVT from 'ol/format/MVT';
 import { Fill, Stroke, Style, Circle } from 'ol/style.js';
 import TileLayer from './TileLayer';
 import VectorTileLayer from './VectorTileLayer';
+import ModVectorLayer from './ModifiableVectorLayer';
 import LayerGroup from './LayerGroup';
 import Feature from 'ol/Feature';
 import layerIdGen from './layerIdGen';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 
 const groups = {};
 
@@ -18,6 +21,10 @@ const styles = {};
 const sources = {};
 
 //Define vector tile layer sources
+sources.geojsonHolder = new VectorSource({
+  format: new GeoJSON()
+});
+
 sources.edges = new VectorTileSource({
   format: new MVT({ featureClass: Feature }),
   url: '/layers/ways/{z}/{x}/{y}.mvt'
@@ -76,6 +83,13 @@ styles.selectedLine = new Style({
   })
 });
 
+styles.loadedLine = new Style({
+  stroke: new Stroke({
+    color: 'purple',
+    width: 5
+  })
+});
+
 //Compose Layers
 
 //Create basemap layer group
@@ -87,6 +101,16 @@ styles.selectedLine = new Style({
 //     properties={{ title: 'Basemaps', type: 'base', fold: 'open' }}
 //   />
 // );
+layers.customGroups = (
+  <ModVectorLayer
+    key={layerIdGen()}
+    modLayerInd={true}
+    source={sources.geojsonHolder}
+    style={styles.loadedLine}
+    options={{ visible: false, title: 'User Feature Groups' }}
+  />
+);
+
 layers.edges = (
   <VectorTileLayer
     key={layerIdGen()}
@@ -106,6 +130,7 @@ layers.nodes = (
 layers.nyccsl = (
   <VectorTileLayer
     key={layerIdGen()}
+    sourceTableId="nyccsl"
     source={sources.nyccsl}
     style={styles.nyccsl}
     options={{ minZoom: 14, title: 'Street Centerlines' }}
@@ -139,7 +164,8 @@ groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
 //no success yet. Removing layerGroup for now, but may add upon repair
 const LayerSpecs = [
   ...groups.basemaps,
-  ...groups.featureLayers
+  ...groups.featureLayers,
+  layers.customGroups
   // <LayerGroup
   //   key={layerIdGen()}
   //   properties={{

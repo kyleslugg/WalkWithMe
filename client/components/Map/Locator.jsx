@@ -3,8 +3,8 @@ import MapContext from './MapContext';
 import { fromLonLat, get } from 'ol/proj.js';
 import FeatureSaveLoad from './Controls/FeatureSaveLoad';
 
-const Locator = (props) => {
-  const { map } = useContext(MapContext);
+const Locator = ({ children }) => {
+  const { map, selection } = useContext(MapContext);
 
   //Setting up geolocation API
   const geolocationOptions = {
@@ -86,6 +86,7 @@ const Locator = (props) => {
         </div>
         <div className="button-row">
           <input
+            className="full-width"
             type="submit"
             value={'Search'}
             onClick={searchAddress}
@@ -97,10 +98,7 @@ const Locator = (props) => {
         <div className="title">Layers</div>
         <div id="layer-selector"></div>
       </div>
-      <div id="layer-saver-functionality" className="control-pane">
-        <div className="title">Save and Load Features</div>
-        <FeatureSaveLoad />
-      </div>
+      {children}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import MapContext from '../MapContext';
 
 const VectorTileLayer = ({
   source,
+  sourceTableId,
   style = {},
   zIndex = 0,
   options = {},
@@ -30,6 +31,7 @@ const VectorTileLayer = ({
       map.addLayer(vtLayer);
     }
     vtLayer.setZIndex(zIndex);
+    vtLayer.setProperties({ sourceTableId });
 
     return () => {
       if (options.removeFromGroup) {
