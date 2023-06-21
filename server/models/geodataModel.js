@@ -1,5 +1,5 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import * as pg from 'pg';
+const { Pool } = pg;
 
 const connectionPool = new Pool({
   host: 'localhost',
