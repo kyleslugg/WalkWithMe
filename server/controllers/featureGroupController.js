@@ -1,5 +1,6 @@
-const query = require('../models/geodataModel');
-const tableSpecs = require('../models/tableSpecs');
+import query from '../models/geodataModel.js';
+import tableSpecs from '../models/tableSpecs.js';
+const { FEATURE_GROUPS } = tableSpecs;
 
 const featureGroupController = {};
 
@@ -68,7 +69,7 @@ featureGroupController.saveFeatureGroup = (req, res, next) => {
   const { table, geomColumn } = tableSpecs[sourceTableId.toUpperCase()];
   const formattedGroupName = formatGroupName(groupName);
   const queryString = `INSERT INTO ${
-    tableSpecs.FEATURE_GROUPS.table
+    FEATURE_GROUPS.table
   } (name, orig_name, geom)
   VALUES ('${formattedGroupName}', '${groupName}',
     ST_Collect(
@@ -86,4 +87,4 @@ featureGroupController.saveFeatureGroup = (req, res, next) => {
   });
 };
 
-module.exports = featureGroupController;
+export default featureGroupController;

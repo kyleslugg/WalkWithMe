@@ -1,9 +1,14 @@
-const path = require('path');
-const express = require('express');
-const layersRouter = require('./routes/layersRouter');
-const geocodeRouter = require('./routes/geocodeRouter');
+import { join } from 'path';
+import express from 'express';
+import layersRouter from './routes/layersRouter.js';
+import geocodeRouter from './routes/geocodeRouter.js';
+import routingRouter from './routes/routingRouter.js';
+import dotenv from 'dotenv';
+import * as url from 'url';
 
-require('dotenv').config();
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+dotenv.config();
 
 const app = express();
 
@@ -26,13 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
+    res.status(200).sendFile(join(__dirname, '../dist/index.html'));
   });
-  app.use('/', express.static(path.join(__dirname, '../dist')));
+  app.use('/', express.static(join(__dirname, '../dist')));
 } else {
-  app.use('/', express.static(path.join(__dirname, '../client')));
+  app.use('/', express.static(join(__dirname, '../client')));
   app.get('/', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
+    res.status(200).sendFile(join(__dirname, '../client/index.html'));
   });
 }
 
@@ -40,6 +45,11 @@ if (process.env.NODE_ENV === 'production') {
  * Redirect to layers router if request for layer data comes in
  */
 app.use('/layers', layersRouter);
+
+/**
+ * Redirect to routing router if routing-related request comes in
+ */
+app.use('/routes', routingRouter);
 
 /**
  * Handle geolocation lookups from geocodeController
@@ -76,4 +86,4 @@ app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}...`);
 });
 
-module.exports = app;
+export default app;

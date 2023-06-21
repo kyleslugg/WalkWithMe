@@ -1,8 +1,8 @@
-const path = require('path');
-const express = require('express');
-const layerExtentsController = require('../controllers/layerExtentsController');
-const featureGroupController = require('../controllers/featureGroupController');
-const router = new express.Router();
+import path from 'path';
+import { Router } from 'express';
+import layerExtentsController from '../controllers/layerExtentsController.js';
+import featureGroupController from '../controllers/featureGroupController.js';
+const router = new Router();
 
 router.get(
   '/:tableid/:z/:x/:y.mvt',
@@ -43,4 +43,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 const geocodeController = {};
 
 const createError = (method, log, status, message = log) => {
@@ -60,4 +60,4 @@ geocodeController.geocodeAddress = async function (req, res, next) {
   }
 };
 
-module.exports = geocodeController;
+export default geocodeController;

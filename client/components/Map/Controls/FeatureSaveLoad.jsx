@@ -1,11 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
-import MapContext from '../MapContext';
-import SavedFeatureGroup from './SavedFeatureGroup';
-import layerIdGen from '../Layers/layerIdGen';
-import VectorSource from 'ol/source/Vector';
+import MapContext from '../MapContext.jsx';
+import SavedFeatureGroup from './SavedFeatureGroup.jsx';
+import layerIdGen from '../Layers/layerIdGen.js';
 import GeoJSON from 'ol/format/GeoJSON';
-import { layers, sources } from '../Layers/LayerSpecs';
-import LayerSwitcher from 'ol-layerswitcher';
+import { sources } from '../Layers/LayerSpecs.js';
 
 const FeatureSaveLoad = (props) => {
   const { selection, map } = useContext(MapContext);

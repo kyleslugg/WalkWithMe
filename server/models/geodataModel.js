@@ -1,4 +1,5 @@
-const Pool = require('pg').Pool;
+import pkg from 'pg';
+const { Pool } = pkg;
 
 const connectionPool = new Pool({
   host: 'localhost',
@@ -12,4 +13,4 @@ const query = (queryString, params, callback) => {
   return connectionPool.query(queryString, params, callback);
 };
 
-module.exports = query;
+export default query;

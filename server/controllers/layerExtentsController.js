@@ -1,5 +1,6 @@
-const query = require('../models/geodataModel');
-const tableSpecs = require('../models/tableSpecs');
+import query from '../models/geodataModel.js';
+import tableSpecs from '../models/tableSpecs.js';
+const { EDGES, NODES, NYCCSL } = tableSpecs;
 const controller = {};
 
 const createError = (method, log, status, message = log) => {
@@ -99,16 +100,16 @@ controller.getVectorTilesForCoords = async function (req, res, next) {
   let TABLE;
 
   switch (tableid) {
-    case tableSpecs.EDGES.table:
-      TABLE = tableSpecs.EDGES;
+    case EDGES.table:
+      TABLE = EDGES;
       break;
 
-    case tableSpecs.NODES.table:
-      TABLE = tableSpecs.NODES;
+    case NODES.table:
+      TABLE = NODES;
       break;
 
-    case tableSpecs.NYCCSL.table:
-      TABLE = tableSpecs.NYCCSL;
+    case NYCCSL.table:
+      TABLE = NYCCSL;
       break;
 
     default:
@@ -129,4 +130,4 @@ controller.getVectorTilesForCoords = async function (req, res, next) {
   return next();
 };
 
-module.exports = controller;
+export default controller;

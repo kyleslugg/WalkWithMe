@@ -1,5 +1,19 @@
 const tableSpecs = {};
 
+tableSpecs.TOPO_EDGES = {
+  table: 'nyccsl_topo.edges_data',
+  srid: '4326',
+  geomColumn: 'geom',
+  attrColumns: 'edge_id, start_node, end_node'
+};
+
+tableSpecs.TOPO_NODES = {
+  table: 'nyccsl_topo.node',
+  srid: '4326',
+  geomColumn: 'geom',
+  attrColumns: 'node_id'
+};
+
 tableSpecs.EDGES = {
   table: 'ways',
   srid: '4326',
@@ -28,4 +42,4 @@ tableSpecs.FEATURE_GROUPS = {
   attrColumns: 'group_name'
 };
 
-module.exports = tableSpecs;
+export default tableSpecs;

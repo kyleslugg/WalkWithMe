@@ -1,16 +1,16 @@
 import React from 'react';
-import VectorTileSource from 'ol/source/VectorTile';
-import XYZ from 'ol/source/XYZ';
-import MVT from 'ol/format/MVT';
+import VectorTileSource from 'ol/source/VectorTile.js';
+import XYZ from 'ol/source/XYZ.js';
+import MVT from 'ol/format/MVT.js';
 import { Fill, Stroke, Style, Circle } from 'ol/style.js';
-import TileLayer from './TileLayer';
-import VectorTileLayer from './VectorTileLayer';
-import ModVectorLayer from './ModifiableVectorLayer';
-import LayerGroup from './LayerGroup';
-import Feature from 'ol/Feature';
-import layerIdGen from './layerIdGen';
-import VectorSource from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
+import TileLayer from './TileLayer.jsx';
+import VectorTileLayer from './VectorTileLayer.jsx';
+import ModVectorLayer from './ModifiableVectorLayer.jsx';
+import LayerGroup from './LayerGroup.jsx';
+import Feature from 'ol/Feature.js';
+import layerIdGen from './layerIdGen.js';
+import VectorSource from 'ol/source/Vector.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
 
 const groups = {};
 
