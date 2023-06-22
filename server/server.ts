@@ -1,8 +1,8 @@
 import { join } from 'path';
-import express from 'express';
-import layersRouter from './routes/layersRouter.js';
-import geocodeRouter from './routes/geocodeRouter.js';
-import routingRouter from './routes/routingRouter.js';
+import express, { Request, Response, NextFunction, Router } from 'express';
+import layersRouter from './routes/layersRouter';
+import geocodeRouter from './routes/geocodeRouter';
+import routingRouter from './routes/routingRouter';
 import dotenv from 'dotenv';
 import * as url from 'url';
 
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('/', (req, res) => {
+  app.get('/', (req: Request, res: Response) => {
     res.status(200).sendFile(join(__dirname, '../dist/index.html'));
   });
   app.use('/', express.static(join(__dirname, '../dist')));
@@ -59,7 +59,7 @@ app.use('/routes', routingRouter);
 app.use('/geocode', geocodeRouter);
 
 // catch-all route handler for any requests to an unknown route
-app.use((req, res) =>
+app.use((req: Request, res: Response) =>
   res.status(404).send("This is not the page you're looking for...")
 );
 
@@ -68,7 +68,7 @@ app.use((req, res) =>
  * @see https://expressjs.com/en/guide/error-handling.html#writing-error-handlers
  */
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
     status: 500,

@@ -1,13 +1,13 @@
 import path from 'path';
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import layerExtentsController from '../controllers/layerExtentsController.js';
 import featureGroupController from '../controllers/featureGroupController.js';
-const router = new Router();
+const router = Router();
 
 router.get(
   '/:tableid/:z/:x/:y.mvt',
   layerExtentsController.getVectorTilesForCoords,
-  (req, res) => {
+  (req: Request, res: Response) => {
     res
       .status(200)
       .set('Content-type', 'application/vnd.mapbox-vector-tile')
@@ -18,7 +18,7 @@ router.get(
 router.post(
   '/featuregroups',
   featureGroupController.saveFeatureGroup,
-  (req, res) => {
+  (req: Request, res: Response) => {
     res
       .status(200)
       .set('Content-type', 'application/json')
@@ -29,7 +29,7 @@ router.post(
 router.get(
   '/featuregroups/:id',
   featureGroupController.getFeatureGroupByID,
-  (req, res) => {
+  (req: Request, res: Response) => {
     res.status(200).json(res.locals.retrievedFeatureGroup);
   }
 );
@@ -37,7 +37,7 @@ router.get(
 router.get(
   '/featuregroups',
   featureGroupController.getAllFeatureGroups,
-  (req, res) => {
+  (req: Request, res: Response) => {
     console.log('Back in final middleware...');
     res.status(200).json(res.locals.allCustomFeatureGroups);
   }

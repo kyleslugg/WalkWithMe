@@ -1,14 +1,17 @@
 import query from '../models/geodataModel.js';
 import tableSpecs from '../models/tableSpecs.js';
+import { Controller, JSON, MiddlewareErrorSpec } from '../../types.js';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 const { FEATURE_GROUPS } = tableSpecs;
 
-const featureGroupController = {};
+const featureGroupController: Controller<RequestHandler> = {};
 
-const formatGroupName = (name) => {
+const formatGroupName = (name: String) => {
   return name.toLowerCase().replaceAll(/[^\w]+/gi, '_');
 };
 
-const createError = (method, log, status, message = log) => {
+const createError = (options: MiddlewareErrorSpec) => {
+  const { method, log, status, message } = options;
   return {
     log: `Encountered error in featureGroupController.${method}: ${log}`,
     status: status,
@@ -16,7 +19,11 @@ const createError = (method, log, status, message = log) => {
   };
 };
 
-featureGroupController.getAllFeatureGroups = (req, res, next) => {
+featureGroupController.getAllFeatureGroups = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // const queryString = `select json_agg(s.geoms)
   // from (
   //   select st_asgeojson(t.*)::json as geoms
@@ -25,28 +32,32 @@ featureGroupController.getAllFeatureGroups = (req, res, next) => {
   //   ) t
   // ) s`;
   const queryString = 'select id, name, orig_name from custom_feature_groups';
-  query(queryString).then((response) => {
+  query(queryString).then((response: JSON) => {
     //res.locals.allCustomFeatureGroups = response.rows[0].json_agg;
     res.locals.allCustomFeatureGroups = response.rows;
     return next();
   });
 };
 
-featureGroupController.getFeatureGroupByID = (req, res, next) => {
+featureGroupController.getFeatureGroupByID = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   const queryString = `SELECT st_asgeojson(t.*)::json as geoms 
   from (
     SELECT c.id, c.name, ST_Transform(c.geom, 3857) as geom 
     FROM custom_feature_groups c) t 
   where t.id = ${id}`;
-  query(queryString).then((response) => {
+  query(queryString).then((response: JSON) => {
     if (response.rowCount === 0) {
       return next(
-        createError(
-          'getFeatureGroupByID',
-          'No featuregroup found with provided ID',
-          400
-        )
+        createError({
+          method: 'getFeatureGroupByID',
+          log: 'No featuregroup found with provided ID',
+          status: 400
+        })
       );
     }
     res.locals.retrievedFeatureGroup = response.rows[0].geoms;
@@ -54,16 +65,20 @@ featureGroupController.getFeatureGroupByID = (req, res, next) => {
   });
 };
 
-featureGroupController.saveFeatureGroup = (req, res, next) => {
+featureGroupController.saveFeatureGroup = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { groupName, featureIds, sourceTableId, idField } = req.body;
   console.log(req.body);
   if (!featureIds || !sourceTableId || !idField || groupName == '') {
     return next(
-      createError(
-        'saveFeatureGroup',
-        'Request missing feature IDs, source table ID, or feature ID field',
-        400
-      )
+      createError({
+        method: 'saveFeatureGroup',
+        log: 'Request missing feature IDs, source table ID, or feature ID field',
+        status: 400
+      })
     );
   }
   const { table, geomColumn } = tableSpecs[sourceTableId.toUpperCase()];
@@ -81,7 +96,7 @@ featureGroupController.saveFeatureGroup = (req, res, next) => {
       )
     ) RETURNING name, orig_name, id`;
 
-  query(queryString).then((result) => {
+  query(queryString).then((result: JSON) => {
     res.locals.saveResult = result.rows[0];
     return next();
   });

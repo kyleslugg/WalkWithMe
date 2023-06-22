@@ -1,4 +1,6 @@
-const tableSpecs = {};
+import { GeodataTableSpec } from '../../types';
+
+const tableSpecs: { [k: string]: GeodataTableSpec } = {};
 
 tableSpecs.TOPO_EDGES = {
   table: 'nyccsl_topo.edges_data',

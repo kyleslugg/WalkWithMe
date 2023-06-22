@@ -1,7 +1,10 @@
 import fetch from 'node-fetch';
-const geocodeController = {};
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Controller, MiddlewareErrorSpec } from '../../types';
+const geocodeController: Controller<RequestHandler> = {};
 
-const createError = (method, log, status, message = log) => {
+const createError = (errorSpec: MiddlewareErrorSpec) => {
+  const { method, log, status, message } = errorSpec;
   return {
     log: `Encountered error in geocodeController.${method}: ${log}`,
     status: status,
@@ -9,7 +12,11 @@ const createError = (method, log, status, message = log) => {
   };
 };
 
-geocodeController.geocodeAddress = async function (req, res, next) {
+geocodeController.geocodeAddress = async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const { queryString } = req.params;
   //console.log(process.env.GEOCODER_API_KEY);
   if (queryString) {
@@ -35,11 +42,11 @@ geocodeController.geocodeAddress = async function (req, res, next) {
         if (!data[0]) {
           //console.log('No results from geocoder -- returning error.');
           return next(
-            createError(
-              'geocodeAddress',
-              'Geocoder returns no results for provided query string',
-              400
-            )
+            createError({
+              method: 'geocodeAddress',
+              log: 'Geocoder returns no results for provided query string',
+              status: 400
+            })
           );
         }
         res.locals.latlong = {
@@ -50,11 +57,12 @@ geocodeController.geocodeAddress = async function (req, res, next) {
       })
       .catch((err) => {
         return next(
-          createError(
-            'geocodeAddress',
-            `Encountered error when calling geocode API: ${err}`,
-            500
-          )
+          createError({
+            method: 'geocodeAddress',
+            log: `Encountered error when calling geocode API: ${err}`,
+            status: 500,
+            message: 'Encountered error when calling geocode API'
+          })
         );
       });
   }

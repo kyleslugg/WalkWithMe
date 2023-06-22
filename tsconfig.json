@@ -1,13 +1,15 @@
 {
   "include": ["server/**/*", "client/**/*"],
   "compilerOptions": {
-    "types": ["node", "jest"],
+    "types": ["node"],
     "esModuleInterop": true,
     "jsx": "react",
     "target": "ES6",
     "module": "ESNext",
     "moduleResolution": "node",
-    "sourceMap": true
+    "sourceMap": true,
+    "strict": true,
+    "lib": ["ES2022"]
   },
   "ts-node": {
     "esm": true

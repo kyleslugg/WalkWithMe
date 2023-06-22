@@ -1,9 +1,17 @@
-import query from '../models/geodataModel.js';
-import tableSpecs from '../models/tableSpecs.js';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+import query from '../models/geodataModel';
+import tableSpecs from '../models/tableSpecs';
+import {
+  Tile,
+  GeodataTableSpec,
+  Controller,
+  MiddlewareErrorSpec
+} from '../../types.js';
 const { EDGES, NODES, NYCCSL } = tableSpecs;
-const controller = {};
+const controller: Controller<RequestHandler> = {};
 
-const createError = (method, log, status, message = log) => {
+const createError = (options: MiddlewareErrorSpec) => {
+  const { method, log, status, message } = options;
   return {
     log: `Encountered error in layerExtentsController.${method}: ${log}`,
     status: status,
@@ -11,18 +19,19 @@ const createError = (method, log, status, message = log) => {
   };
 };
 
-const checkCoords = (tile) => {
+const checkCoords = (tile: Tile, next: NextFunction): Boolean | void => {
   const { zoom, x, y } = tile;
   const size = 2 ** zoom;
-  const thisError = createError(
-    'checkCoords',
-    'X or Y value out of bounds for zoom level',
-    400
-  );
+  const thisError = createError({
+    method: 'checkCoords',
+    log: 'X or Y value out of bounds for zoom level',
+    status: 400,
+    message: 'X or Y value out of bounds for zoom level'
+  });
 
   if (x >= size || y >= size) {
     return next(thisError);
-  } else if ((x < 0, y < 0)) {
+  } else if (x < 0 || y < 0) {
     return next(thisError);
   }
 
@@ -30,7 +39,7 @@ const checkCoords = (tile) => {
 };
 
 //https://postgis.net/docs/ST_TileEnvelope.html
-const coordsToTileBounds = function (tile, margin) {
+const coordsToTileBounds = function (tile: Tile, margin?: number): string {
   const { zoom, x, y } = tile;
   const worldMercMax = 20037508.3427892;
   const worldMercMin = -1 * worldMercMax;
@@ -42,7 +51,7 @@ const coordsToTileBounds = function (tile, margin) {
 
 //Write a query to pull a tile's worth of MVT data from the relevant table
 
-const boundsToSql = function (tile, tab) {
+const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
   const { table, geomColumn, attrColumns } = tab;
   const tileBounds = coordsToTileBounds(tile);
   const tileBoundsWithMargin = coordsToTileBounds(tile, 64 / 4096);
@@ -57,7 +66,7 @@ const boundsToSql = function (tile, tab) {
   return sql;
 };
 
-const sqlToPbf = async (sql, next) => {
+const sqlToPbf = async (sql: string, next: NextFunction) => {
   const result = await query(sql);
   return result.rows[0];
   //   return next(
@@ -68,34 +77,41 @@ const sqlToPbf = async (sql, next) => {
 
 /*================================= Main function definition here ======================================*/
 
-controller.getVectorTilesForCoords = async function (req, res, next) {
+controller.getVectorTilesForCoords = async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   //Extract requested table name, zoom level, and x/y coordinates from request.params
   //Repackage as tile
   //Ensure all parameters exist
   const { tableid, z, y, x } = req.params;
-  const tile = { zoom: z, x, y };
+  const tile: Tile = { zoom: Number(z), x: Number(x), y: Number(y) };
 
   if ([tableid, z, y, x].some((el) => !el)) {
     return next(
-      createError(
-        'getTilesForCoords',
-        'error retrieving tiles -- incorrect parameters',
-        400
-      )
+      createError({
+        method: 'getTilesForCoords',
+        log: 'error retrieving tiles -- incorrect parameters',
+        status: 400,
+        message: 'error retrieving tiles -- incorrect parameters'
+      })
     );
   }
 
   //Ensure coordinates are valid for the provided level of zoom
-  if (!checkCoords(tile)) {
+  if (!checkCoords(tile, next)) {
     return next(
-      createError(
-        'getTilesForCoords',
-        'Requested coordinates invalid for provided zoom level',
-        400
-      )
+      createError({
+        method: 'getTilesForCoords',
+        log: 'Requested coordinates invalid for provided zoom level',
+        status: 400,
+        message: 'Requested coordinates invalid for provided zoom level'
+      })
     );
   }
 
+  /*TODO: Refactor to eliminate switch statment / enable additional tables*/
   //Select table details from above based on tableid
   let TABLE;
 
@@ -114,18 +130,19 @@ controller.getVectorTilesForCoords = async function (req, res, next) {
 
     default:
       return next(
-        createError(
-          'getVectorTilesForCoords',
-          'Table ID from request path not recognized',
-          400
-        )
+        createError({
+          method: 'getVectorTilesForCoords',
+          log: 'Table ID from request path not recognized',
+          status: 400,
+          message: 'Table ID from request path not recognized'
+        })
       );
   }
 
   //Generate SQL for geodata within envelope
   const sql = boundsToSql(tile, TABLE);
 
-  res.locals.pbf = await sqlToPbf(sql);
+  res.locals.pbf = await sqlToPbf(sql, next);
 
   return next();
 };
