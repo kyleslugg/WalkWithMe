@@ -6,3 +6,4 @@ package-lock.json
 *.docx
 _GARBAGE_BIN/
 Passeggiata/
+src/server/data
