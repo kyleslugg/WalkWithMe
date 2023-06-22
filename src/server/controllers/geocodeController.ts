@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { Controller, MiddlewareErrorSpec } from '../../types';
+import { Controller, MiddlewareErrorSpec } from '../../types.js';
 const geocodeController: Controller<RequestHandler> = {};
 
 const createError = (errorSpec: MiddlewareErrorSpec) => {
@@ -27,6 +27,7 @@ geocodeController.geocodeAddress = async function (
       )}`,
       {
         method: 'GET',
+        //@ts-ignore
         headers: {
           'X-RapidAPI-Key': process.env.GEOCODER_API_KEY,
           'X-RapidAPI-Host': 'forward-reverse-geocoding.p.rapidapi.com'

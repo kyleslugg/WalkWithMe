@@ -1,4 +1,4 @@
-import pg, { Query, QueryResult, QueryResultRow } from 'pg';
+import pg, { Query, QueryResult } from 'pg';
 
 import { JSON } from '../../types';
 
@@ -12,11 +12,8 @@ const connectionPool = new Pool({
   database: 'osm4routing'
 });
 
-const query = async (
-  queryString: string,
-  params?: any[],
-  callback?: (err: Error, result: pg.QueryResult<any>) => void
-): Promise<void | QueryResult<any>> => {
+//FIXME: Fix PG query typing
+const query = (queryString: string, params?: any, callback?: any) => {
   return connectionPool.query(queryString, params, callback);
 };
 

@@ -1,8 +1,8 @@
 import { join } from 'path';
 import express, { Request, Response, NextFunction, Router } from 'express';
-import layersRouter from './routes/layersRouter';
-import geocodeRouter from './routes/geocodeRouter';
-import routingRouter from './routes/routingRouter';
+import layersRouter from './routes/layersRouter.js';
+import geocodeRouter from './routes/geocodeRouter.js';
+import routingRouter from './routes/routingRouter.js';
 import dotenv from 'dotenv';
 import * as url from 'url';
 

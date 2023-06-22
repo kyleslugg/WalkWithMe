@@ -32,6 +32,8 @@ featureGroupController.getAllFeatureGroups = (
   //   ) t
   // ) s`;
   const queryString = 'select id, name, orig_name from custom_feature_groups';
+  //FIXME: Solve PG typing
+  //@ts-ignore
   query(queryString).then((response: JSON) => {
     //res.locals.allCustomFeatureGroups = response.rows[0].json_agg;
     res.locals.allCustomFeatureGroups = response.rows;
@@ -50,7 +52,9 @@ featureGroupController.getFeatureGroupByID = (
     SELECT c.id, c.name, ST_Transform(c.geom, 3857) as geom 
     FROM custom_feature_groups c) t 
   where t.id = ${id}`;
-  query(queryString).then((response: JSON) => {
+  //FIXME: Solve PG typing
+  //@ts-ignore
+  query(queryString).then((response: { [s: string]: any }) => {
     if (response.rowCount === 0) {
       return next(
         createError({
@@ -95,8 +99,9 @@ featureGroupController.saveFeatureGroup = (
         )
       )
     ) RETURNING name, orig_name, id`;
-
-  query(queryString).then((result: JSON) => {
+  //FIXME: Solve PG typing
+  //@ts-ignore
+  query(queryString).then((result: { [s: string]: any }) => {
     res.locals.saveResult = result.rows[0];
     return next();
   });

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import query from '../models/geodataModel';
-import tableSpecs from '../models/tableSpecs';
+import query from '../models/geodataModel.js';
+import tableSpecs, { tableLookup } from '../models/tableSpecs.js';
 import {
   Tile,
   GeodataTableSpec,
@@ -52,13 +52,13 @@ const coordsToTileBounds = function (tile: Tile, margin?: number): string {
 //Write a query to pull a tile's worth of MVT data from the relevant table
 
 const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
-  const { table, geomColumn, attrColumns } = tab;
+  const { schema, table, geomColumn, attrColumns } = tab;
   const tileBounds = coordsToTileBounds(tile);
   const tileBoundsWithMargin = coordsToTileBounds(tile, 64 / 4096);
 
   const sql = `WITH mvtgeom as (
       SELECT ST_AsMVTGeom(ST_Transform(t.${geomColumn}, 3857), ${tileBounds}, 4096, 64) as geom, ${attrColumns}
-      FROM ${table} t
+      FROM ${schema}.${table} t
       WHERE ST_Transform(t.${geomColumn}, 3857) && ${tileBoundsWithMargin})
     SELECT ST_AsMVT(mvtgeom.*)
     FROM mvtgeom`;
@@ -68,6 +68,9 @@ const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
 
 const sqlToPbf = async (sql: string, next: NextFunction) => {
   const result = await query(sql);
+
+  //FIXME: Solve PG typing
+  //@ts-ignore
   return result.rows[0];
   //   return next(
   //     createError('sqlToPbf', 'error querying database for tile data', 500)
@@ -113,34 +116,23 @@ controller.getVectorTilesForCoords = async function (
 
   /*TODO: Refactor to eliminate switch statment / enable additional tables*/
   //Select table details from above based on tableid
-  let TABLE;
+  let TABLE: string;
 
-  switch (tableid) {
-    case EDGES.table:
-      TABLE = EDGES;
-      break;
-
-    case NODES.table:
-      TABLE = NODES;
-      break;
-
-    case NYCCSL.table:
-      TABLE = NYCCSL;
-      break;
-
-    default:
-      return next(
-        createError({
-          method: 'getVectorTilesForCoords',
-          log: 'Table ID from request path not recognized',
-          status: 400,
-          message: 'Table ID from request path not recognized'
-        })
-      );
+  try {
+    TABLE = tableLookup[tableid];
+  } catch (error) {
+    return next(
+      createError({
+        method: 'getVectorTilesForCoords',
+        log: `Table ID from request path not recognized: ${error}`,
+        status: 400,
+        message: 'Table ID from request path not recognized'
+      })
+    );
   }
 
   //Generate SQL for geodata within envelope
-  const sql = boundsToSql(tile, TABLE);
+  const sql = boundsToSql(tile, tableSpecs[TABLE]);
 
   res.locals.pbf = await sqlToPbf(sql, next);
 

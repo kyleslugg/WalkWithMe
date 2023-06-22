@@ -4,7 +4,8 @@ import {
   getTopographicalData,
   getEdgesVertices,
   writeRoutingFile
-} from './helpers/topologyProcessors';
+} from './helpers/topologyProcessors.js';
+import tableSpecs from '../models/tableSpecs.js';
 
 //Create module-level error handler
 export const createError = (errorSpec: MiddlewareErrorSpec) => {
@@ -25,7 +26,7 @@ routingController.formatEdgesNodes = async (
 ) => {
   //Pull edges from database
 
-  const edgeData = await getTopographicalData();
+  const edgeData = await getTopographicalData(tableSpecs.BK_TEST, 1000000);
 
   const { textFileString, vertexToIndexMap, enrichedEdgeData } =
     getEdgesVertices(edgeData);

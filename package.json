@@ -2,12 +2,12 @@
   "name": "where2walk",
   "version": "1.0.0",
   "description": "A simple route finder for neighborhood walks of specified duration",
-  "main": "server/server.js",
+  "main": "src/server/server.js",
   "type": "module",
   "scripts": {
     "start": "NODE_ENV=production ts-node server/server.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --hot --progress --color \" \"NODE_OPTIONS='--no-warnings --loader ts-node/esm' nodemon ./server/server.js\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --hot --progress --color \" \"NODE_OPTIONS='--no-warnings --loader ts-node/esm' nodemon ./src/server/server.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

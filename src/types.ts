@@ -8,8 +8,10 @@ export interface Tile {
 }
 
 export interface GeodataTableSpec {
+  schema: string;
   table: string;
   srid: string;
+  idColumn: string;
   geomColumn: string;
   attrColumns: string | string[];
 }

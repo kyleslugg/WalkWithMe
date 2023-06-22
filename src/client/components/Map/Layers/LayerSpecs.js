@@ -20,6 +20,7 @@ const styles = {};
 
 const sources = {};
 
+//TODO: Parameterize layer creation by hashed layer IDs
 //Define vector tile layer sources
 sources.geojsonHolder = new VectorSource({
   format: new GeoJSON()
@@ -27,17 +28,17 @@ sources.geojsonHolder = new VectorSource({
 
 sources.edges = new VectorTileSource({
   format: new MVT({ featureClass: Feature }),
-  url: '/layers/ways/{z}/{x}/{y}.mvt'
+  url: '/layers/public-ways/{z}/{x}/{y}.mvt'
 });
 
 sources.nodes = new VectorTileSource({
   format: new MVT({ featureClass: Feature }),
-  url: '/layers/ways_vertices_pgr/{z}/{x}/{y}.mvt'
+  url: '/layers/public-ways_vertices_pgr/{z}/{x}/{y}.mvt'
 });
 
 sources.nyccsl = new VectorTileSource({
   format: new MVT({ featureClass: Feature }),
-  url: '/layers/nyccsl/{z}/{x}/{y}.mvt',
+  url: '/layers/public-nyccsl/{z}/{x}/{y}.mvt',
   attributions:
     'Street centerlines by NYC OTI via <a href="https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b">NYC OpenData</a>'
 });

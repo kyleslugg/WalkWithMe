@@ -1,5 +1,5 @@
 {
-  "include": ["server/**/*", "client/**/*"],
+  "include": ["src/**/*"],
   "compilerOptions": {
     "types": ["node"],
     "esModuleInterop": true,
