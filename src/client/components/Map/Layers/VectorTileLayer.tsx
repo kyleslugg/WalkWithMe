@@ -1,8 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, FC } from 'react';
 import OLVectorTileLayer from 'ol/layer/VectorTile';
 import MapContext from '../MapContext';
+import { LayerProps } from '../../../../types';
+import VectorTileSource from 'ol/source/VectorTile.js';
 
-const VectorTileLayer = ({
+const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
   source,
   sourceTableId,
   style = {},

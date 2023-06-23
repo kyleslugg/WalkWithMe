@@ -1,8 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import MapContext from '../MapContext';
 import OLTileLayer from 'ol/layer/Tile';
+import { LayerProps } from '../../../../types';
+import TileSource from 'ol/source/Tile';
 
-const TileLayer = ({
+const TileLayer: FC<LayerProps<TileSource>> = ({
   source,
   style = {},
   zIndex = 0,

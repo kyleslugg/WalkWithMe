@@ -1,23 +1,37 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  FC,
+  ReactNode,
+  SyntheticEvent
+} from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import MapContext from './MapContext';
-import VectorSource from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
 import { defaults } from 'ol/interaction/defaults';
-import { makeSelector, onSelect, getSelection } from './Controls/Selector';
+import { makeSelector, onSelect, getSelection } from './Controls/Selector.jsx';
+import { Coordinate } from 'ol/coordinate';
+import { FeatureSelection, FeatureSet } from '../../../types';
+import { EventType } from 'ol/layer/Group';
+import { SelectEvent } from 'ol/interaction/Select';
 
-const MapWrapper = ({ children, zoom, center }) => {
+const MapWrapper: FC<{
+  zoom: number;
+  center: Coordinate;
+  children: ReactNode;
+}> = ({ zoom, center, children }) => {
   //We will use this component to hold the state of our map, as well as
   //the pane for the map itself
-  const [map, setMap] = useState(null);
-  const [selection, setSelection] = useState(null);
+  const [map, setMap] = useState<Map | null>(null);
+  const [selection, setSelection] = useState<FeatureSelection>(null);
 
-  const mapElement = useRef();
+  const mapElement = useRef(null);
 
   //Instantiate selector, which will let us select elements
   const selector = makeSelector();
-  selector.on('select', (e) => {
+  /**@todo Figure out why "select" isn't registering as type EventType */
+  selector.on('select', (e: SelectEvent) => {
     onSelect(e, selector);
     setSelection(getSelection());
   });
@@ -39,10 +53,12 @@ const MapWrapper = ({ children, zoom, center }) => {
       interactions: newDefaults
     };
 
+    /**@todo Fix options type -- related to useRef() and type of target, above */
+    //@ts-ignore
     const initialMap = new Map(options);
     setMap(initialMap);
 
-    return () => initialMap.setTarget(null);
+    return () => initialMap.setTarget(undefined);
   }, []);
 
   useEffect(() => {

@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { FC, ReactElement, ReactNode } from 'react';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import XYZ from 'ol/source/XYZ.js';
 import MVT from 'ol/format/MVT.js';
 import { Fill, Stroke, Style, Circle } from 'ol/style.js';
-import TileLayer from './TileLayer.jsx';
-import VectorTileLayer from './VectorTileLayer.jsx';
-import ModVectorLayer from './ModifiableVectorLayer.jsx';
-import LayerGroup from './LayerGroup.jsx';
+import TileLayer from './TileLayer.js';
+import VectorTileLayer from './VectorTileLayer.js';
+import ModVectorLayer from './ModifiableVectorLayer.js';
+import LayerGroup from './LayerGroup.js';
 import Feature from 'ol/Feature.js';
 import layerIdGen from './layerIdGen.js';
 import VectorSource from 'ol/source/Vector.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
+import Source from 'ol/source/Source.js';
+import { LayerDefinitionSet, LayerProps } from '../../../../types.js';
+import Layer from 'ol/layer/Layer.js';
+import TileSource from 'ol/source/Tile.js';
+//import LayerGroup from 'ol/layer/Group.js';
 
-const groups = {};
+const groups: LayerDefinitionSet<ReactNode> = {};
 
-const layers = {};
+const layers: LayerDefinitionSet<ReactElement> = {};
 
-const styles = {};
+const styles: LayerDefinitionSet<Style> = {};
 
-const sources = {};
+const sources: LayerDefinitionSet<
+  VectorSource<any> | TileSource | VectorTileSource
+> = {};
 
 //TODO: Parameterize layer creation by hashed layer IDs
 //Define vector tile layer sources
@@ -115,6 +122,8 @@ layers.customGroups = (
 layers.edges = (
   <VectorTileLayer
     key={layerIdGen()}
+    /**@todo As elsewhere, refactor LayerProps to distinguish between modifiable and unmodifiable layers */
+    //@ts-ignore
     source={sources.edges}
     style={styles.edges}
     options={{ minZoom: 14, visible: false, title: 'OSM Routes' }}
@@ -123,15 +132,18 @@ layers.edges = (
 layers.nodes = (
   <VectorTileLayer
     key={layerIdGen()}
+    //@ts-ignore
     source={sources.nodes}
     style={styles.nodes}
     options={{ minZoom: 14, visible: false, title: 'OSM Nodes' }}
   />
 );
+
 layers.nyccsl = (
   <VectorTileLayer
     key={layerIdGen()}
     sourceTableId="nyccsl"
+    //@ts-ignore
     source={sources.nyccsl}
     style={styles.nyccsl}
     options={{ minZoom: 14, title: 'Street Centerlines' }}
@@ -163,11 +175,11 @@ groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
 //FIXME: Layers are not associated with layer groups on the map
 //Have tried passing down a callback function to add layers, but
 //no success yet. Removing layerGroup for now, but may add upon repair
-const LayerSpecs = [
+const LayerSpecs: ReactNode = [
   ...groups.basemaps,
   ...groups.featureLayers,
   layers.customGroups
-  // <LayerGroup
+  // <LayerGroupComp
   //   key={layerIdGen()}
   //   properties={{
   //     title: 'Roads and Intersections',

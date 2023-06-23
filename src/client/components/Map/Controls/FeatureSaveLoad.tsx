@@ -1,34 +1,66 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  DOMElement,
+  HTMLAttributes,
+  ReactNode
+} from 'react';
 import MapContext from '../MapContext.jsx';
 import SavedFeatureGroup from './SavedFeatureGroup.jsx';
 import layerIdGen from '../Layers/layerIdGen.js';
 import GeoJSON from 'ol/format/GeoJSON';
-import { sources } from '../Layers/LayerSpecs.js';
+import { sources } from '../Layers/LayerSpecs.jsx';
 
-const FeatureSaveLoad = (props) => {
+const FeatureSaveLoad = () => {
   const { selection, map } = useContext(MapContext);
 
   //Establish state to save feature groups
-  const [savedGroups, setSavedGroups] = useState([]);
+  const [savedGroups, setSavedGroups] = useState<Array<ReactNode | null>>([]);
+
+  //Identify input elements
+  const featureGroupNameInput: HTMLInputElement | null = document.querySelector(
+    '#featureGroupNameInput'
+  );
+
+  const addressInputForm: HTMLFormElement | null =
+    document.querySelector('#addressInputForm');
+
+  const textField: HTMLFormElement | null = document.querySelector(
+    '#featureGroupNameInput'
+  );
 
   //Locate layer to which to add loaded features:
 
-  const showSavedSection = (bool) => {
-    const el = document.querySelector('#savedFeatureGroups');
-    el.hidden = !bool;
+  const showSavedSection = (bool: boolean) => {
+    const el: HTMLElement | null = document.querySelector(
+      '#savedFeatureGroups'
+    );
+    if (el) {
+      el.hidden = !bool;
+    }
   };
 
   const saveSelection = async () => {
+    if (!selection || !selection?.selectionLayer) return;
     //Get layer and feature info for request
 
     const { selectionLayer, idField, selectionSet } = selection;
+
     const sourceTableId = selectionLayer.get('sourceTableId');
+
     const featureIds = [...selectionSet].map((el) => {
-      return el.get(idField);
+      if (idField) {
+        return el.get(idField);
+      } else {
+        throw new Error(
+          'Unsuccessful in saving selection -- no idField identified'
+        );
+      }
     });
 
     //Get feature group name
-    const groupName = document.querySelector('#featureGroupNameInput').value;
+    const groupName = featureGroupNameInput ? featureGroupNameInput.value : '';
 
     //Assemble request body
     const requestBodyData = {
@@ -54,7 +86,7 @@ const FeatureSaveLoad = (props) => {
       })
       .then((response) => {
         const { id, name, orig_name } = response;
-        const newSavedList = [...savedGroups];
+        const newSavedList: ReactNode[] = [...savedGroups];
         newSavedList.push(
           <SavedFeatureGroup
             key={layerIdGen()}
@@ -66,14 +98,16 @@ const FeatureSaveLoad = (props) => {
         );
         showSavedSection(true);
         setSavedGroups(newSavedList);
-        document.querySelector('#addressInputForm').reset();
+        if (addressInputForm) {
+          addressInputForm.reset();
+        }
       })
       .catch((e) => {
         console.log(`Error: ${e}. Unable to complete feature group save.`);
       });
   };
 
-  const makeLoadFeature = (id) => {
+  const makeLoadFeature = (id: number) => {
     //const mapRef = map;
 
     const featureLoader = () => {
@@ -85,6 +119,8 @@ const FeatureSaveLoad = (props) => {
           features.forEach((f) => {
             f.setId(f.get('id'));
           });
+          /**@todo Refactor typing on LayerDefinitionSet to distinguish modifiable from unmodifiable elements */
+          //@ts-ignore
           sources.geojsonHolder.addFeatures(features);
         });
     };
@@ -118,15 +154,16 @@ const FeatureSaveLoad = (props) => {
 
   useEffect(() => {
     console.log(savedGroups);
-    showSavedSection(savedGroups.length);
+    showSavedSection(Boolean(savedGroups.length));
   }, [savedGroups]);
 
   useEffect(() => {
-    const textField = document.querySelector('#featureGroupNameInput');
-    if (!selection || selection.size == 0) {
-      textField.disabled = true;
-    } else {
-      textField.disabled = false;
+    if (textField) {
+      if (!selection?.selectionSet || selection.selectionSet.size == 0) {
+        textField.disabled = true;
+      } else {
+        textField.disabled = false;
+      }
     }
   }, [selection]);
 
