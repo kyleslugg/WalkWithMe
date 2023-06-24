@@ -1,6 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { FC } from 'react';
+import { FeatureGroupProps } from '../../../../types';
 
-const SavedFeatureGroup = ({ id, stdName, displayName, loadFeature }) => {
+const SavedFeatureGroup: FC<FeatureGroupProps> = ({
+  id,
+  stdName,
+  displayName,
+  loadFeature
+}) => {
   return (
     <div className="saved-group">
       <button className="group-title" onClick={loadFeature}>

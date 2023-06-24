@@ -1,9 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, FC, Context } from 'react';
 import MapContext from '../MapContext';
 import VectorLayer from 'ol/layer/Vector';
+import { FeatureSet, LayerProps } from '../../../../types';
+import VectorSource from 'ol/source/Vector.js';
+import Map from 'ol/Map.js';
 
-const ModVectorLayer = ({ modLayerInd, source, options, style }) => {
-  const [features, setFeatures] = useState(null);
+const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
+  modLayerInd,
+  source,
+  options,
+  style
+}) => {
+  const [features, setFeatures] = useState<FeatureSet>({});
   const { map } = useContext(MapContext);
   const vlayer = new VectorLayer({
     ...options,
@@ -15,7 +23,7 @@ const ModVectorLayer = ({ modLayerInd, source, options, style }) => {
     if (!map) return;
 
     map.addLayer(vlayer);
-    source.on('addFeature', () => {
+    source.on('addfeature', () => {
       console.log('Layer source changed');
 
       vlayer.changed();

@@ -1,27 +1,34 @@
-import Select from 'ol/interaction/Select';
+import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click, shiftKeyOnly } from 'ol/events/condition';
 import { styles } from '../Layers/LayerSpecs';
+import Layer from 'ol/layer/Layer';
+import Feature from 'ol/Feature';
+import { FeatureSelection } from '../../../../types';
 
-const selection = new Set();
-let selectionLayer;
-let idField;
+const selection = new Set<Feature>();
+let selectionLayer: Layer | null;
+let idField: string | null;
 
 const defaultOptions = {
   condition: click,
-  layers: (layer) => {
-    return layer.getProperties()['type'] != 'base'; //TODO: IMPLEMENT A FUNCTION THAT WILL FILTER FOR DESIRED LAYER FOR SELECTION
+  layers: (layer: Layer) => {
+    return layer.getProperties()['type'] != 'base';
   },
 
   toggleCondition: shiftKeyOnly,
   hitTolerance: 2
-  //Can also implement filter function (taking layer, feature) in place of layers:
 };
 
+/**@ref See OpenLayers: ol/interaction/Select */
 export const makeSelector = (options = defaultOptions) => {
   return new Select(options);
 };
 
-export const onSelect = (e, selector, style = styles.selectedLine) => {
+export const onSelect = (
+  e: SelectEvent,
+  selector: Select,
+  style = styles.selectedLine
+) => {
   // console.log(`Layer: ${selectionLayer}; ID Field: ${idField}`);
   // console.log('Selection:');
   // console.log(selection);
@@ -35,7 +42,9 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
         element.setStyle();
         selection.delete(element);
       });
-      selectionLayer.changed();
+      if (selectionLayer) {
+        selectionLayer.changed();
+      }
       selectionLayer = null;
       idField = null;
     }
@@ -53,7 +62,9 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
       el.setStyle();
       selection.delete(el);
     });
-    selectionLayer.changed();
+    if (selectionLayer) {
+      selectionLayer.changed();
+    }
     selectionLayer = selector.getLayer(e.selected[0]);
     idField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
   }
@@ -66,10 +77,12 @@ export const onSelect = (e, selector, style = styles.selectedLine) => {
     feature.setStyle(style);
   });
 
-  selectionLayer.changed();
+  if (selectionLayer) {
+    selectionLayer.changed();
+  }
 };
 
-export const getSelection = () => {
+export const getSelection = (): FeatureSelection => {
   return { selectionLayer, idField, selectionSet: selection };
 };
 
