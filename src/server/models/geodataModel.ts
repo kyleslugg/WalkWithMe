@@ -1,7 +1,5 @@
 import pg, { Query, QueryResult } from 'pg';
 
-import { JSON } from '../../types';
-
 const { Pool } = pg;
 
 const connectionPool = new Pool({
