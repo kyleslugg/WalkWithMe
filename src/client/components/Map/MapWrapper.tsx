@@ -1,19 +1,11 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  FC,
-  ReactNode,
-  SyntheticEvent
-} from 'react';
+import React, { useState, useRef, useEffect, FC, ReactNode } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import MapContext from './MapContext';
 import { defaults } from 'ol/interaction/defaults';
-import { makeSelector, onSelect, getSelection } from './Controls/Selector.jsx';
+import { makeSelector, onSelect, getSelection } from './Controls/Selector';
 import { Coordinate } from 'ol/coordinate';
-import { FeatureSelection, FeatureSet } from '../../../types';
-import { EventType } from 'ol/layer/Group';
+import { FeatureSelection } from '../../../types';
 import { SelectEvent } from 'ol/interaction/Select';
 
 const MapWrapper: FC<{

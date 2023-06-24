@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, FC, Context } from 'react';
-import MapContext from '../MapContext.jsx';
+import MapContext from '../MapContext';
 import VectorLayer from 'ol/layer/Vector';
 import { FeatureSet, LayerProps } from '../../../../types';
 import VectorSource from 'ol/source/Vector.js';

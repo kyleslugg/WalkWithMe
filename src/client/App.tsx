@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import LayerSwitcher from 'ol-layerswitcher';
 import MapWrapper from './components/Map/MapWrapper';
-import Layers from './components/Map/Layers/LayersContainer.js';
+import Layers from './components/Map/Layers/LayersContainer';
 import { fromLonLat, get } from 'ol/proj.js';
 
-import MapControls from './components/Map/Controls/MapControls.jsx';
+import MapControls from './components/Map/Controls/MapControls';
 
-import Locator from './components/Map/Locator.jsx';
-import FeatureSaveLoad from './components/Map/Controls/FeatureSaveLoad.js';
+import Locator from './components/Map/Locator';
+import FeatureSaveLoad from './components/Map/Controls/FeatureSaveLoad';
 import './styles/styles.scss';
 import './styles/ol.css';
 

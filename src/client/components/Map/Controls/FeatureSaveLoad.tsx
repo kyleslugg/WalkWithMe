@@ -6,11 +6,11 @@ import React, {
   HTMLAttributes,
   ReactNode
 } from 'react';
-import MapContext from '../MapContext.jsx';
-import SavedFeatureGroup from './SavedFeatureGroup.jsx';
-import layerIdGen from '../Layers/layerIdGen.js';
+import MapContext from '../MapContext';
+import SavedFeatureGroup from './SavedFeatureGroup';
+import layerIdGen from '../Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
-import { sources } from '../Layers/LayerSpecs.jsx';
+import { sources } from '../Layers/LayerSpecs';
 
 const FeatureSaveLoad = () => {
   const { selection, map } = useContext(MapContext);

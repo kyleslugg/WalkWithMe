@@ -1,10 +1,10 @@
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
 import LayerSwitcher from 'ol-layerswitcher';
 import { useContext, useEffect } from 'react';
-import MapContext from '../MapContext.jsx';
-import { toStringXY } from 'ol/coordinate';
+import MapContext from '../MapContext';
+import { CoordinateFormat, toStringXY } from 'ol/coordinate';
 
-const MapControls = (props) => {
+const MapControls = () => {
   const { map } = useContext(MapContext);
   const layerSwitcher = new LayerSwitcher({
     //reverse: true,
@@ -16,23 +16,25 @@ const MapControls = (props) => {
     //new Rotate(),
     new Attribution(),
     new MousePosition({
-      coordinateFormat: toStringXY
+      coordinateFormat: toStringXY as CoordinateFormat
     })
   ];
 
   useEffect(() => {
-    if (!map) return;
+    const layerSelector: HTMLElement | null =
+      document.querySelector('#layer-selector');
+    if (!map || !layerSelector) return;
 
     for (const control of controls) {
-      map.controls.push(control);
+      map.getControls().push(control);
     }
 
-    LayerSwitcher.renderPanel(map, document.querySelector('#layer-selector'));
+    LayerSwitcher.renderPanel(map, layerSelector, {});
     //layerSwitcher.setMap(map);
 
     return () => {
       for (const control of controls) {
-        map.controls.remove(control);
+        map.getControls().remove(control);
       }
     };
   }, [map]);
