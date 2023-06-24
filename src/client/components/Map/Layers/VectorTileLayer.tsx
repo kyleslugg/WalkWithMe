@@ -1,6 +1,6 @@
 import { useContext, useEffect, FC } from 'react';
 import OLVectorTileLayer from 'ol/layer/VectorTile';
-import MapContext from '../MapContext';
+import MapContext from '../Core/MapContext';
 import { LayerProps } from '../../../../types';
 import VectorTileSource from 'ol/source/VectorTile.js';
 

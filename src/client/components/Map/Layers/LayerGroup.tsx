@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, cloneElement } from 'react';
-import MapContext from '../MapContext';
+import MapContext from '../Core/MapContext';
 import OLLayerGroup from 'ol/layer/Group';
 import Collection from 'ol/Collection';
 

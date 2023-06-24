@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import MapContext from './MapContext';
+import MapContext from '../Map/Core/MapContext';
 import { fromLonLat, get } from 'ol/proj.js';
-import FeatureSaveLoad from './Controls/FeatureSaveLoad';
+import FeatureSaveLoad from './FeatureSaveLoad';
 
 const Locator = ({ children }) => {
   const { map, selection } = useContext(MapContext);

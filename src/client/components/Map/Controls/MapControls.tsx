@@ -1,7 +1,7 @@
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
 import LayerSwitcher from 'ol-layerswitcher';
 import { useContext, useEffect } from 'react';
-import MapContext from '../MapContext';
+import MapContext from '../Core/MapContext';
 import { CoordinateFormat, toStringXY } from 'ol/coordinate';
 
 const MapControls = () => {

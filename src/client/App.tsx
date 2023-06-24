@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import LayerSwitcher from 'ol-layerswitcher';
-import MapWrapper from './components/Map/MapWrapper';
-import Layers from './components/Map/Layers/LayersContainer';
+import MapWrapper from './components/Map/Core/MapWrapper';
+import Layers from './components/Map/Core/LayersContainer';
 import { fromLonLat, get } from 'ol/proj.js';
 
 import MapControls from './components/Map/Controls/MapControls';
 
-import Locator from './components/Map/Locator';
-import FeatureSaveLoad from './components/Map/Controls/FeatureSaveLoad';
+import Locator from './components/Sidebar/Locator';
+import FeatureSaveLoad from './components/Sidebar/FeatureSaveLoad';
 import './styles/styles.scss';
 import './styles/ol.css';
+import GenerateWalkingPath from './components/Sidebar/GenerateWalkingPath';
 
 //import './stylesheets/styles.css';
 
@@ -26,6 +27,7 @@ const App = () => {
     <MapWrapper center={startingCenter} zoom={zoom}>
       <Layers />
       <Locator>
+        <GenerateWalkingPath />
         <FeatureSaveLoad />
       </Locator>
       <MapControls />

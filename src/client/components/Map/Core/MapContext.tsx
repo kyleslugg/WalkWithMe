@@ -1,6 +1,6 @@
 import Map from 'ol/Map';
 import { createContext } from 'react';
-import { FeatureSelection } from '../../../types';
+import { FeatureSelection } from '../../../../types';
 
 const MapContext = createContext<{
   map: Map | null;
