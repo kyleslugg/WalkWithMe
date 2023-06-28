@@ -1,8 +1,9 @@
-import { FC, useContext, useEffect } from 'react';
-import MapContext from '../Core/MapContext';
+import { FC, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import OLTileLayer from 'ol/layer/Tile';
 import { LayerProps } from '../../../../types';
 import TileSource from 'ol/source/Tile';
+import { RootState } from '../../../store/store';
 
 const TileLayer: FC<LayerProps<TileSource>> = ({
   source,
@@ -12,7 +13,7 @@ const TileLayer: FC<LayerProps<TileSource>> = ({
   addToGroup = null,
   removeFromGroup = null
 }) => {
-  const { map } = useContext(MapContext);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
 
   let tileLayer = new OLTileLayer({
     ...options,

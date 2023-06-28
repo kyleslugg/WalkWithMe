@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect, FC, Context } from 'react';
-import MapContext from '../Core/MapContext';
+import React, { useState, useEffect, FC } from 'react';
+import { useSelector } from 'react-redux';
 import VectorLayer from 'ol/layer/Vector';
 import { FeatureSet, LayerProps } from '../../../../types';
 import VectorSource from 'ol/source/Vector.js';
-import Map from 'ol/Map.js';
+import { RootState } from '../../../store/store';
 
 const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
   modLayerInd,
@@ -12,7 +12,7 @@ const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
   style
 }) => {
   const [features, setFeatures] = useState<FeatureSet>({});
-  const { map } = useContext(MapContext);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
   const vlayer = new VectorLayer({
     ...options,
     style: style,

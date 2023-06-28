@@ -1,19 +1,20 @@
 import React, {
-  useContext,
   useState,
   useEffect,
   DOMElement,
   HTMLAttributes,
   ReactNode
 } from 'react';
-import MapContext from '../Map/Core/MapContext';
+import { useSelector } from 'react-redux';
 import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/LayerSpecs';
+import { RootState } from '../../store/store';
 
 const FeatureSaveLoad = () => {
-  const { selection, map } = useContext(MapContext);
+  const selection = useSelector((state: RootState) => state.mapSlice.selection);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
 
   //Establish state to save feature groups
   const [savedGroups, setSavedGroups] = useState<Array<ReactNode | null>>([]);

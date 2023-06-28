@@ -1,19 +1,21 @@
 import React, {
-  useContext,
   useState,
   useEffect,
   DOMElement,
   HTMLAttributes,
   ReactNode
 } from 'react';
-import MapContext from '../Map/Core/MapContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/LayerSpecs';
 
 const GenerateWalkingPath = () => {
-  const { selection, map } = useContext(MapContext);
+  const selection = useSelector((state: RootState) => state.mapSlice.selection);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
+
   const [unit, setUnit] = useState<string>('mins');
 
   //Identify fields

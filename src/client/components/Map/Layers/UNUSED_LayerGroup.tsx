@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState, cloneElement } from 'react';
-import MapContext from '../Core/MapContext';
+import React, { useEffect, useState, cloneElement } from 'react';
+import { useSelector } from 'react-redux';
 import OLLayerGroup from 'ol/layer/Group';
 import Collection from 'ol/Collection';
+import { RootState } from '../../../store/store';
 
 const LayerGroup = ({ children, properties }) => {
-  const { map } = useContext(MapContext);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
   // const [layers, setLayers] = useState(null);
 
   const group = new OLLayerGroup({ ...properties, layers: [] });

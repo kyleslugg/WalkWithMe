@@ -1,11 +1,12 @@
 import { MousePosition, Zoom, Rotate, Attribution } from 'ol/control';
+import { useSelector } from 'react-redux';
 import LayerSwitcher from 'ol-layerswitcher';
-import { useContext, useEffect } from 'react';
-import MapContext from '../Core/MapContext';
+import { useEffect } from 'react';
 import { CoordinateFormat, toStringXY } from 'ol/coordinate';
+import { RootState } from '../../../store/store';
 
 const MapControls = () => {
-  const { map } = useContext(MapContext);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
   const layerSwitcher = new LayerSwitcher({
     //reverse: true,
     groupSelectStyle: 'group'

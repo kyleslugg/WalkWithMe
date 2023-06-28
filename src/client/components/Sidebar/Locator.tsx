@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
-import MapContext from '../Map/Core/MapContext';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import { fromLonLat, get } from 'ol/proj.js';
 import FeatureSaveLoad from './FeatureSaveLoad';
 
 const Locator = ({ children }) => {
-  const { map, selection } = useContext(MapContext);
+  const selection = useSelector((state: RootState) => state.mapSlice.selection);
+  const map = useSelector((state: RootState) => state.mapSlice.map);
 
   //Setting up geolocation API
   const geolocationOptions = {
