@@ -1,6 +1,6 @@
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click, shiftKeyOnly } from 'ol/events/condition';
-import { styles } from '../Layers/LayerSpecs';
+import { styles } from '../Layers/MapLayers';
 import Layer from 'ol/layer/Layer';
 import Feature from 'ol/Feature';
 import { FeatureSelection } from '../../../../types';

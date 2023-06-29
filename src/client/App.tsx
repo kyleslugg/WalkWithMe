@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LayerSwitcher from 'ol-layerswitcher';
 import MapWrapper from './components/Map/Core/MapWrapper';
-import Layers from './components/Map/Core/LayersContainer';
+import MapLayers from './components/Map/Layers/MapLayers';
 import { fromLonLat, get } from 'ol/proj.js';
 
 import MapControls from './components/Map/Controls/MapControls';
@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <MapWrapper center={startingCenter} zoom={zoom}>
-      <Layers />
+      <MapLayers />
       <Locator>
         <FeatureSaveLoad />
       </Locator>

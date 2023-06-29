@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
-import { sources } from '../Map/Layers/LayerSpecs';
+import { sources } from '../Map/Layers/MapLayers';
 import { RootState } from '../../store/store';
 
 const FeatureSaveLoad = () => {

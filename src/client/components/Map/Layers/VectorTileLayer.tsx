@@ -2,10 +2,9 @@ import { useEffect, FC } from 'react';
 import OLVectorTileLayer from 'ol/layer/VectorTile';
 import { LayerProps } from '../../../../types';
 import VectorTileSource from 'ol/source/VectorTile.js';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 
 const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
+  map,
   source,
   sourceTableId,
   style = {},
@@ -15,8 +14,6 @@ const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
   removeFromGroup = null,
   getGroup = null
 }) => {
-  const map = useSelector((state: RootState) => state.mapSlice.map);
-
   const vtLayer = new OLVectorTileLayer({
     ...options,
     source,

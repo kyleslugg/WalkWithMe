@@ -12,6 +12,8 @@ import VectorSource from 'ol/source/Vector.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { LayerDefinitionSet, LayerProps } from '../../../../types.js';
 import TileSource from 'ol/source/Tile.js';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
 //import LayerGroup from 'ol/layer/Group.js';
 
 const groups: LayerDefinitionSet<ReactNode> = {};
@@ -95,64 +97,72 @@ styles.loadedLine = new Style({
   })
 });
 
-//Compose Layers
+const MapLayers = () => {
+  const map = useSelector((state: RootState) => state.mapSlice.map);
+  layers.customGroups = (
+    <ModVectorLayer
+      map={map}
+      key={layerIdGen()}
+      modLayerInd={true}
+      source={sources.geojsonHolder}
+      style={styles.loadedLine}
+      options={{ visible: false, title: 'User Feature Groups' }}
+    />
+  );
 
-//Create basemap layer group
+  layers.edges = (
+    <VectorTileLayer
+      map={map}
+      key={layerIdGen()}
+      /**@todo As elsewhere, refactor LayerProps to distinguish between modifiable and unmodifiable layers */
+      //@ts-ignore
+      source={sources.edges}
+      style={styles.edges}
+      options={{ minZoom: 14, visible: false, title: 'OSM Routes' }}
+    />
+  );
+  layers.nodes = (
+    <VectorTileLayer
+      map={map}
+      key={layerIdGen()}
+      //@ts-ignore
+      source={sources.nodes}
+      style={styles.nodes}
+      options={{ minZoom: 14, visible: false, title: 'OSM Nodes' }}
+    />
+  );
 
-// groups.basemaps = (
-//   <LayerGroup
-//     layers={groups.basemaps}
-//     groupName={'basemaps'}
-//     properties={{ title: 'Basemaps', type: 'base', fold: 'open' }}
-//   />
-// );
-layers.customGroups = (
-  <ModVectorLayer
-    key={layerIdGen()}
-    modLayerInd={true}
-    source={sources.geojsonHolder}
-    style={styles.loadedLine}
-    options={{ visible: false, title: 'User Feature Groups' }}
-  />
-);
+  layers.nyccsl = (
+    <VectorTileLayer
+      map={map}
+      key={layerIdGen()}
+      sourceTableId="nyccsl"
+      //@ts-ignore
+      source={sources.nyccsl}
+      style={styles.nyccsl}
+      options={{ minZoom: 14, title: 'Street Centerlines' }}
+    />
+  );
+  layers.stamenTerrain = (
+    <TileLayer
+      map={map}
+      key={layerIdGen()}
+      source={sources.stamenTerrain}
+      options={{ title: 'Stamen Terrain', type: 'base' }}
+    />
+  );
 
-layers.edges = (
-  <VectorTileLayer
-    key={layerIdGen()}
-    /**@todo As elsewhere, refactor LayerProps to distinguish between modifiable and unmodifiable layers */
-    //@ts-ignore
-    source={sources.edges}
-    style={styles.edges}
-    options={{ minZoom: 14, visible: false, title: 'OSM Routes' }}
-  />
-);
-layers.nodes = (
-  <VectorTileLayer
-    key={layerIdGen()}
-    //@ts-ignore
-    source={sources.nodes}
-    style={styles.nodes}
-    options={{ minZoom: 14, visible: false, title: 'OSM Nodes' }}
-  />
-);
+  groups.basemaps = [layers.stamenTerrain];
+  groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
 
-layers.nyccsl = (
-  <VectorTileLayer
-    key={layerIdGen()}
-    sourceTableId="nyccsl"
-    //@ts-ignore
-    source={sources.nyccsl}
-    style={styles.nyccsl}
-    options={{ minZoom: 14, title: 'Street Centerlines' }}
-  />
-);
-layers.stamenTerrain = (
-  <TileLayer
-    key={layerIdGen()}
-    source={sources.stamenTerrain}
-    options={{ title: 'Stamen Terrain', type: 'base' }}
-  />
-);
+  const theseLayers = [
+    ...groups.basemaps,
+    ...groups.featureLayers,
+    layers.customGroups
+  ];
+
+  return <>{theseLayers}</>;
+};
 
 // layers.nyccslSelection = (
 //   <VectorTileSelectionLayer
@@ -167,26 +177,9 @@ layers.stamenTerrain = (
 //   />
 // );
 //Assign Layers to Groups
-groups.basemaps = [layers.stamenTerrain];
-groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
+
 //FIXME: Layers are not associated with layer groups on the map
 //Have tried passing down a callback function to add layers, but
 //no success yet. Removing layerGroup for now, but may add upon repair
-const LayerSpecs: ReactNode = [
-  ...groups.basemaps,
-  ...groups.featureLayers,
-  layers.customGroups
-  // <LayerGroupComp
-  //   key={layerIdGen()}
-  //   properties={{
-  //     title: 'Roads and Intersections',
-  //     fold: 'close',
-  //     combine: false
-  //   }}
-  // >
-  //   {groups.featureLayers}
-  // </LayerGroup>
-  //layers.nyccslSelection
-];
 
-export { LayerSpecs as default, styles, groups, layers, sources };
+export { MapLayers as default, styles, groups, layers, sources };

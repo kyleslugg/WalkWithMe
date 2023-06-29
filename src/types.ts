@@ -1,6 +1,7 @@
 /** Types for Geodata Manipulation and Representation */
 
 import Feature from 'ol/Feature';
+import OLMap from 'ol/Map';
 import { extend } from 'ol/array';
 import Layer, { Options } from 'ol/layer/Layer';
 import Source from 'ol/source/Source';
@@ -45,6 +46,7 @@ export interface LayerDefinitionSet<T> {
 }
 
 export interface LayerProps<SourceType extends Source> {
+  map: OLMap | null;
   modLayerInd?: boolean;
   source?: SourceType;
   sourceTableId?: string;

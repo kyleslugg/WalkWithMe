@@ -1,18 +1,17 @@
 import React, { useState, useEffect, FC } from 'react';
-import { useSelector } from 'react-redux';
 import VectorLayer from 'ol/layer/Vector';
 import { FeatureSet, LayerProps } from '../../../../types';
 import VectorSource from 'ol/source/Vector.js';
-import { RootState } from '../../../store/store';
 
 const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
+  map,
   modLayerInd,
   source,
   options,
   style
 }) => {
   const [features, setFeatures] = useState<FeatureSet>({});
-  const map = useSelector((state: RootState) => state.mapSlice.map);
+
   const vlayer = new VectorLayer({
     ...options,
     style: style,

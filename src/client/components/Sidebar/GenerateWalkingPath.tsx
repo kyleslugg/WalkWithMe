@@ -10,7 +10,7 @@ import { RootState } from '../../store/store';
 import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
-import { sources } from '../Map/Layers/LayerSpecs';
+import { sources } from '../Map/Layers/MapLayers';
 
 const GenerateWalkingPath = () => {
   const selection = useSelector((state: RootState) => state.mapSlice.selection);
