@@ -3,11 +3,8 @@ import { click, shiftKeyOnly } from 'ol/events/condition';
 import { styles } from '../Layers/MapLayers';
 import Layer from 'ol/layer/Layer';
 import Feature from 'ol/Feature';
-import { FeatureSelection } from '../../../../types';
-
-const selection = new Set<Feature>();
-let selectionLayer: Layer | null;
-let idField: string | null;
+import { store } from '../../../store/store';
+import { setSelection } from '../../../store/slices/mapSlice';
 
 const defaultOptions = {
   condition: click,
@@ -21,7 +18,11 @@ const defaultOptions = {
 
 /**@ref See OpenLayers: ol/interaction/Select */
 export const makeSelector = (options = defaultOptions) => {
-  return new Select(options);
+  const selector = new Select(options);
+  selector.on('select', (e: SelectEvent) => {
+    onSelect(e, selector);
+  });
+  return selector;
 };
 
 export const onSelect = (
@@ -29,11 +30,14 @@ export const onSelect = (
   selector: Select,
   style = styles.selectedLine
 ) => {
-  // console.log(`Layer: ${selectionLayer}; ID Field: ${idField}`);
-  // console.log('Selection:');
-  // console.log(selection);
-  // console.log('Event:`');
-  // console.dir(e);
+  const { selectionLayer, idField, selectionSet } =
+    store.getState().mapSlice.selection;
+
+  const selection = new Set([...selectionSet]);
+  let newSelectionLayer;
+  let newIdField;
+
+  console.log(selection, selectionLayer, selectionSet);
 
   if (!e.selected.length) {
     console.log('Empty select');
@@ -45,45 +49,47 @@ export const onSelect = (
       if (selectionLayer) {
         selectionLayer.changed();
       }
-      selectionLayer = null;
-      idField = null;
+      newSelectionLayer = null;
+      newIdField = null;
     }
-    return;
-  }
+  } else {
+    if (e.selected[0] && !selectionLayer) {
+      newSelectionLayer = selector.getLayer(e.selected[0]);
+      newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
+    } else if (
+      e.selected[0] &&
+      selectionLayer !== selector.getLayer(e.selected[0])
+    ) {
+      selection.forEach((el) => {
+        el.setStyle();
+        selection.delete(el);
+      });
+      if (selectionLayer) {
+        selectionLayer.changed();
+      }
+      newSelectionLayer = selector.getLayer(e.selected[0]);
+      newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
+    }
 
-  if (e.selected[0] && !selectionLayer) {
-    selectionLayer = selector.getLayer(e.selected[0]);
-    idField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
-  } else if (
-    e.selected[0] &&
-    selectionLayer !== selector.getLayer(e.selected[0])
-  ) {
-    selection.forEach((el) => {
-      el.setStyle();
-      selection.delete(el);
+    for (const feature of e.selected) {
+      selection.add(feature);
+    }
+
+    selection.forEach((feature) => {
+      feature.setStyle(style);
     });
+
     if (selectionLayer) {
       selectionLayer.changed();
     }
-    selectionLayer = selector.getLayer(e.selected[0]);
-    idField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
   }
-
-  for (const feature of e.selected) {
-    selection.add(feature);
-  }
-
-  selection.forEach((feature) => {
-    feature.setStyle(style);
-  });
-
-  if (selectionLayer) {
-    selectionLayer.changed();
-  }
-};
-
-export const getSelection = (): FeatureSelection => {
-  return { selectionLayer, idField, selectionSet: selection };
+  store.dispatch(
+    setSelection({
+      selectionLayer: newSelectionLayer,
+      idField: newIdField,
+      selectionSet: selection
+    })
+  );
 };
 
 /*

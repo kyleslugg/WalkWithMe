@@ -4,7 +4,7 @@ import View from 'ol/View';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMap, setSelection } from '../../../store/slices/mapSlice';
 import { defaults } from 'ol/interaction/defaults';
-import { makeSelector, onSelect, getSelection } from '../Controls/Selector';
+import { makeSelector } from '../Controls/Selector';
 import { Coordinate } from 'ol/coordinate';
 import { FeatureSelection } from '../../../../types';
 import { SelectEvent } from 'ol/interaction/Select';
@@ -28,10 +28,6 @@ const MapWrapper: FC<{
   //Instantiate selector, which will let us select elements
   const selector = makeSelector();
   /**@todo Figure out why "select" isn't registering as type EventType */
-  selector.on('select', (e: SelectEvent) => {
-    onSelect(e, selector);
-    dispatch(setSelection(getSelection()));
-  });
 
   //Import default interactions, and add selector before instantiating map
   const newDefaults = defaults();
@@ -65,7 +61,7 @@ const MapWrapper: FC<{
 
   //Center/position
   useEffect(() => {
-    if (typeof map !== typeof Map) return;
+    if (!map) return;
     map.getView().setCenter(center);
   }, [center]);
 

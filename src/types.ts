@@ -37,9 +37,9 @@ export interface GeodataQueryResult {
 
 export type FeatureSelection = {
   selectionSet: FeatureSet;
-  selectionLayer: Layer | null;
-  idField: string | null;
-} | null;
+  selectionLayer: Layer | null | undefined;
+  idField: string | null | undefined;
+};
 
 export interface LayerDefinitionSet<T> {
   [s: string]: T;

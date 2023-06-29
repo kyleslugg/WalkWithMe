@@ -4,12 +4,12 @@ import { FeatureSelection } from '../../../types';
 
 interface MapState {
   map: null | Map;
-  selection: null | FeatureSelection;
+  selection: FeatureSelection;
 }
 
 const initialState: MapState = {
   map: null,
-  selection: null
+  selection: { selectionSet: new Set(), selectionLayer: null, idField: null }
 };
 
 export const mapSlice = createSlice({

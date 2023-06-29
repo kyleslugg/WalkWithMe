@@ -22,8 +22,6 @@ const GenerateWalkingPath = () => {
   const distInput: HTMLInputElement | null =
     document.querySelector('#dist-time-input');
 
-  //Handler for calculating path from selection centroid
-
   //Handler for calculating path from freshly selected node
 
   return (
@@ -60,8 +58,9 @@ const GenerateWalkingPath = () => {
         </select>
       </form>
       <div className="button-row">
-        <button className="fill-to-fit">Select Starting Node</button>
-        <button className="fill-to-fit">Use Selection Centerpoint</button>
+        <button className="fill-to-fit" disabled={!true}>
+          Find Path from Selected Node
+        </button>
       </div>
     </div>
   );
