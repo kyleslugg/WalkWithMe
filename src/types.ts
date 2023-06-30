@@ -28,7 +28,7 @@ export type EdgeVertexMapper = {
   enrichedEdgeData: GeodataQueryResult;
 };
 
-export type FeatureSet = Set<Feature>;
+export type FeatureSet = Set<string>;
 //TODO: Elaborate on this result, perhaps building on PG types
 export interface GeodataQueryResult {
   rows: Array<{ [k: string]: string | number | boolean }>;
@@ -37,7 +37,7 @@ export interface GeodataQueryResult {
 
 export type FeatureSelection = {
   selectionSet: FeatureSet;
-  selectionLayer: Layer | null | undefined;
+  selectionLayerId: string | null | undefined;
   idField: string | null | undefined;
 };
 
@@ -47,6 +47,7 @@ export interface LayerDefinitionSet<T> {
 
 export interface LayerProps<SourceType extends Source> {
   map: OLMap | null;
+  layerId: string | number;
   modLayerInd?: boolean;
   source?: SourceType;
   sourceTableId?: string;

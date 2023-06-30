@@ -52,12 +52,12 @@ const coordsToTileBounds = function (tile: Tile, margin?: number): string {
 //Write a query to pull a tile's worth of MVT data from the relevant table
 
 const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
-  const { schema, table, geomColumn, attrColumns } = tab;
+  const { schema, table, geomColumn, attrColumns, idColumn } = tab;
   const tileBounds = coordsToTileBounds(tile);
   const tileBoundsWithMargin = coordsToTileBounds(tile, 64 / 4096);
 
   const sql = `WITH mvtgeom as (
-      SELECT ST_AsMVTGeom(ST_Transform(t.${geomColumn}, 3857), ${tileBounds}, 4096, 64) as geom, ${attrColumns}
+      SELECT ST_AsMVTGeom(ST_Transform(t.${geomColumn}, 3857), ${tileBounds}, 4096, 64) as geom, ${attrColumns}, ${idColumn}
       FROM ${schema}.${table} t
       WHERE ST_Transform(t.${geomColumn}, 3857) && ${tileBoundsWithMargin})
     SELECT ST_AsMVT(mvtgeom.*)

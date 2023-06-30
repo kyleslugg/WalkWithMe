@@ -99,10 +99,12 @@ styles.loadedLine = new Style({
 
 const MapLayers = () => {
   const map = useSelector((state: RootState) => state.mapSlice.map);
+
   layers.customGroups = (
     <ModVectorLayer
       map={map}
       key={layerIdGen()}
+      layerId={layerIdGen()}
       modLayerInd={true}
       source={sources.geojsonHolder}
       style={styles.loadedLine}
@@ -114,6 +116,7 @@ const MapLayers = () => {
     <VectorTileLayer
       map={map}
       key={layerIdGen()}
+      layerId={layerIdGen()}
       /**@todo As elsewhere, refactor LayerProps to distinguish between modifiable and unmodifiable layers */
       //@ts-ignore
       source={sources.edges}
@@ -125,6 +128,7 @@ const MapLayers = () => {
     <VectorTileLayer
       map={map}
       key={layerIdGen()}
+      layerId={layerIdGen()}
       //@ts-ignore
       source={sources.nodes}
       style={styles.nodes}
@@ -136,6 +140,7 @@ const MapLayers = () => {
     <VectorTileLayer
       map={map}
       key={layerIdGen()}
+      layerId={layerIdGen()}
       sourceTableId="nyccsl"
       //@ts-ignore
       source={sources.nyccsl}
@@ -147,6 +152,7 @@ const MapLayers = () => {
     <TileLayer
       map={map}
       key={layerIdGen()}
+      layerId={layerIdGen()}
       source={sources.stamenTerrain}
       options={{ title: 'Stamen Terrain', type: 'base' }}
     />

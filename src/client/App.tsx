@@ -27,6 +27,7 @@ const App = () => {
     <MapWrapper center={startingCenter} zoom={zoom}>
       <MapLayers />
       <Locator>
+        <GenerateWalkingPath />
         <FeatureSaveLoad />
       </Locator>
       <MapControls />

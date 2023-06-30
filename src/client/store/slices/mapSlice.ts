@@ -9,7 +9,7 @@ interface MapState {
 
 const initialState: MapState = {
   map: null,
-  selection: { selectionSet: new Set(), selectionLayer: null, idField: null }
+  selection: { selectionSet: new Set(), selectionLayerId: null, idField: null }
 };
 
 export const mapSlice = createSlice({

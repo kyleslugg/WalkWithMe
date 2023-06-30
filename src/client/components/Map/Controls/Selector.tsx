@@ -2,9 +2,12 @@ import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click, shiftKeyOnly } from 'ol/events/condition';
 import { styles } from '../Layers/MapLayers';
 import Layer from 'ol/layer/Layer';
-import Feature from 'ol/Feature';
+import Feature, { FeatureLike } from 'ol/Feature';
 import { store } from '../../../store/store';
 import { setSelection } from '../../../store/slices/mapSlice';
+import VectorLayer from 'ol/layer/Vector';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import Map from 'ol/Map';
 
 const defaultOptions = {
   condition: click,
@@ -14,6 +17,34 @@ const defaultOptions = {
 
   toggleCondition: shiftKeyOnly,
   hitTolerance: 2
+};
+
+const getLayerFromId = (
+  layerId: string | number | null | undefined,
+  map: Map
+): Layer | null => {
+  if (!layerId) return null;
+  return map
+    .getAllLayers()
+    .filter((layer) => layer.get('layerId') === layerId)[0];
+};
+
+const getFeaturesFromLayer = (
+  map: Map,
+  layer: VectorTileLayer | null,
+  idField: string | null,
+  featureIds: Set<string>
+): Set<FeatureLike> => {
+  if (!idField || !layer) return new Set();
+  const source = layer.getSource();
+
+  //Problem here is that, while vector layers have a features property as below, vector tiles access features
+  //through the getFeaturesInExtent() property, so we need to distinguish between layer types here
+  return new Set(
+    source
+      ?.getFeaturesInExtent(map.getView().calculateExtent())
+      .filter((f) => featureIds.has(f.getProperties()[idField]))
+  );
 };
 
 /**@ref See OpenLayers: ol/interaction/Select */
@@ -30,14 +61,29 @@ export const onSelect = (
   selector: Select,
   style = styles.selectedLine
 ) => {
-  const { selectionLayer, idField, selectionSet } =
+  const { selectionLayerId, idField, selectionSet } =
     store.getState().mapSlice.selection;
 
-  const selection = new Set([...selectionSet]);
-  let newSelectionLayer;
-  let newIdField;
+  const map = store.getState().mapSlice.map;
 
-  console.log(selection, selectionLayer, selectionSet);
+  if (!map) return;
+
+  let selectionLayer = getLayerFromId(selectionLayerId, map);
+
+  //TODO: Need to figure out how to restrict this layerset to vector layers
+  //@ts-ignore
+  let selection = getFeaturesFromLayer(
+    map,
+    selectionLayer,
+    idField,
+    selectionSet
+  );
+
+  let newSelectionLayerId = selectionLayerId;
+
+  let newIdField = idField;
+
+  let newSelectionIds = selectionSet;
 
   if (!e.selected.length) {
     console.log('Empty select');
@@ -49,25 +95,28 @@ export const onSelect = (
       if (selectionLayer) {
         selectionLayer.changed();
       }
-      newSelectionLayer = null;
+      newSelectionLayerId = null;
       newIdField = null;
+      newSelectionIds = new Set();
     }
   } else {
-    if (e.selected[0] && !selectionLayer) {
-      newSelectionLayer = selector.getLayer(e.selected[0]);
+    if (e.selected[0] && !selectionLayerId) {
+      newSelectionLayerId = selector.getLayer(e.selected[0]).get('layerId');
+      selectionLayer = getLayerFromId(newSelectionLayerId, map);
       newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
     } else if (
       e.selected[0] &&
-      selectionLayer !== selector.getLayer(e.selected[0])
+      selectionLayerId !== selector.getLayer(e.selected[0]).get('layerId')
     ) {
-      selection.forEach((el) => {
+      selection.forEach((el: FeatureLike) => {
         el.setStyle();
         selection.delete(el);
       });
       if (selectionLayer) {
         selectionLayer.changed();
       }
-      newSelectionLayer = selector.getLayer(e.selected[0]);
+      newSelectionLayerId = selector.getLayer(e.selected[0]).get('layerId');
+      selectionLayer = getLayerFromId(newSelectionLayerId, map);
       newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
     }
 
@@ -82,12 +131,17 @@ export const onSelect = (
     if (selectionLayer) {
       selectionLayer.changed();
     }
+
+    newSelectionIds = new Set(
+      [...selection].map((el) => el.getProperties()[newIdField!])
+    );
   }
+
   store.dispatch(
     setSelection({
-      selectionLayer: newSelectionLayer,
+      selectionLayerId: newSelectionLayerId,
       idField: newIdField,
-      selectionSet: selection
+      selectionSet: newSelectionIds
     })
   );
 };

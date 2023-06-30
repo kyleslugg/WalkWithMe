@@ -43,22 +43,20 @@ const FeatureSaveLoad = () => {
   };
 
   const saveSelection = async () => {
-    if (!selection || !selection?.selectionLayer) return;
+    const selectionLayer = map
+      ?.getAllLayers()
+      .filter(
+        (layer) => layer.getProperties()['layerId'] == selectionLayerId
+      )[0];
+
+    if (!selection || !selectionLayer) return;
     //Get layer and feature info for request
 
-    const { selectionLayer, idField, selectionSet } = selection;
+    const { selectionLayerId, idField, selectionSet } = selection;
 
     const sourceTableId = selectionLayer.get('sourceTableId');
 
-    const featureIds = [...selectionSet].map((el) => {
-      if (idField) {
-        return el.get(idField);
-      } else {
-        throw new Error(
-          'Unsuccessful in saving selection -- no idField identified'
-        );
-      }
-    });
+    const featureIds = [...selectionSet];
 
     //Get feature group name
     const groupName = featureGroupNameInput ? featureGroupNameInput.value : '';

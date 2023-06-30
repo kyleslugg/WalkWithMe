@@ -6,6 +6,7 @@ import TileSource from 'ol/source/Tile';
 const TileLayer: FC<LayerProps<TileSource>> = ({
   map,
   source,
+  layerId,
   style = {},
   zIndex = 0,
   options = {},
@@ -18,6 +19,8 @@ const TileLayer: FC<LayerProps<TileSource>> = ({
     style,
     zIndex
   });
+
+  tileLayer.set('layerId', layerId);
 
   useEffect(() => {
     if (!map) return;
