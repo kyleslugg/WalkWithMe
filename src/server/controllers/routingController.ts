@@ -3,9 +3,11 @@ import { Controller, MiddlewareErrorSpec } from '../../types.js';
 import {
   getTopographicalData,
   getEdgesVertices,
-  writeRoutingFile
+  writeRoutingFile,
+  runPathFinder
 } from './helpers/topologyProcessors.js';
 import tableSpecs from '../models/tableSpecs.js';
+import * as path from 'path';
 
 //Create module-level error handler
 export const createError = (errorSpec: MiddlewareErrorSpec) => {
@@ -43,10 +45,27 @@ routingController.formatEdgesNodes = async (
 
   console.log(edgeData);
 
-  // const { textFileString, vertexToIndexMap, enrichedEdgeData } =
-  //   getEdgesVertices(edgeData);
+  //Transform the fetched data into edges and vertices for computation
 
-  // writeRoutingFile('routingTopologies.txt', textFileString, next);
+  const { textFileString, vertexToIndexMap, enrichedEdgeData } =
+    getEdgesVertices(edgeData);
+
+  //Write properly formatted input file to disk
+  const resolvedFilePath = writeRoutingFile(
+    'routingTopologies.txt',
+    textFileString,
+    next
+  );
+
+  //Execute pathfinding algorithm on input file created above
+  const processOutput = runPathFinder(
+    resolvedFilePath!,
+    desiredDistance,
+    0,
+    next
+  );
+
+  console.log(processOutput);
 
   return next();
 };

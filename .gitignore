@@ -1,9 +1,9 @@
 node_modules/
 kcircuit/
-server/data/
+data/
 package-lock.json
 *.env
 *.docx
 _GARBAGE_BIN/
 Passeggiata/
-src/server/data
+src/data

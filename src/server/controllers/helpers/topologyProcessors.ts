@@ -6,6 +6,7 @@ import {
 import { createError } from '../routingController.js';
 import query from '../../models/geodataModel.js';
 import { NextFunction } from 'express';
+import * as child from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
@@ -29,11 +30,17 @@ export const getTopographicalData = async (
     geomRestricter = `WHERE ST_DWithin(t.${tableSpec.geomColumn}::geography, 
       ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), 4326)::geography, ${desiredDistance})`;
   }
-  const queryText = `select t.${tableSpec.idColumn}${
-    tableSpec.attrColumns
-  }, trunc(ST_Length(t.${tableSpec.geomColumn}) * ${
-    weightScaler ? weightScaler : 1
-  }) as weight 
+
+  /**Commenting this out for now to test a revised version that uses geography to handle meters conversion */
+  // const queryText = `select t.${tableSpec.idColumn}${
+  //   tableSpec.attrColumns
+  // }, trunc(ST_Length(t.${tableSpec.geomColumn}) * ${
+  //   weightScaler ? weightScaler : 1
+  // }) as weight
+  //   from ${tableSpec.schema}.${tableSpec.table} t
+  //   ${geomRestricter}
+  //   `;
+  const queryText = `select t.${tableSpec.idColumn}${tableSpec.attrColumns}, trunc(ST_Length(t.${tableSpec.geomColumn}::geography)) as weight 
     from ${tableSpec.schema}.${tableSpec.table} t
     ${geomRestricter}
     `;
@@ -88,7 +95,7 @@ export const getEdgesVertices = (
   edgeData.forEach((row: { [s: string]: any }) => {
     row.u = vertexToIndex.get(row[startNodeID]);
     row.v = vertexToIndex.get(row[endNodeID]);
-    textFileArr.push(`e ${row.u} ${row.v} ${row[weightID]}`);
+    textFileArr.push(`e ${row.u} ${row.v} ${row[weightID]}\n`);
   });
 
   //Package up returns
@@ -113,18 +120,46 @@ export const writeRoutingFile = (
   fileName: string,
   fileContent: string,
   next: NextFunction
-): void => {
-  fs.writeFile(
-    path.resolve(__dirname, `../../data/${fileName}`),
-    fileContent,
-    (err) => {
-      return next(
-        createError({
-          method: 'writeRoutingFile',
-          log: `Encountered error while writing file to disk with topology information: ${err}`,
-          status: 500
-        })
-      );
-    }
-  );
+): string | void => {
+  try {
+    fs.writeFileSync(
+      path.resolve(__dirname, `../../../data/${fileName}`),
+      fileContent
+    );
+    return path.resolve(__dirname, `../../../data/${fileName}`);
+  } catch (error) {
+    return next(
+      createError({
+        method: 'writeRoutingFile',
+        log: `Encountered error while writing file to disk with topology information: ${error}`,
+        status: 500
+      })
+    );
+  }
+};
+
+export const runPathFinder = (
+  filePath: string,
+  targetLength: number,
+  sourceVertex: number,
+  next: NextFunction
+) => {
+  /**@todo This method should run the pathfinder and return all necessary information needed to load and continue processing the results.
+   * Need to verify that what is returned is what we need.
+   *
+   * Also need to implement error handling for system call.
+   */
+
+  //Execute pathfinder module from here
+  //-a 3: selects algorithm to use. This uses the Double-Path Heuristic with filtering and selection of random remaining vertex at each stage
+  const execOutput = child
+    .execSync(
+      `cd ${path.resolve(
+        __dirname,
+        '../../../modules/kcircuit_router/'
+      )} | sh kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`
+    )
+    .toString();
+
+  return execOutput;
 };
