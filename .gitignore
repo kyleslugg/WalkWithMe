@@ -7,3 +7,4 @@ package-lock.json
 _GARBAGE_BIN/
 Passeggiata/
 src/data
+modules/kcircuit_router/source
