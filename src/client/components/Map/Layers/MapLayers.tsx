@@ -90,6 +90,19 @@ styles.selectedLine = new Style({
   })
 });
 
+styles.selectedNode = new Style({
+  image: new Circle({
+    stroke: new Stroke({
+      color: 'grey',
+      width: 1
+    }),
+    fill: new Fill({
+      color: 'yellow'
+    }),
+    radius: 3
+  })
+});
+
 styles.loadedLine = new Style({
   stroke: new Stroke({
     color: 'purple',

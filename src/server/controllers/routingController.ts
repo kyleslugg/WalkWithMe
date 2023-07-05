@@ -25,13 +25,28 @@ routingController.formatEdgesNodes = async (
   next: NextFunction
 ) => {
   //Pull edges from database
+  console.log(req.body);
+  const { geom, unit, dist } = req.body;
+  const geometry = JSON.parse(geom).geometry;
+  const desiredDistance =
+    (unit === 'mins' ? Number(dist) * 0.05 : Number(dist)) *
+    1609.34 *
+    (2.0 / 3.0);
 
-  const edgeData = await getTopographicalData(tableSpecs.BK_TEST, 1000000);
+  const edgeData = await getTopographicalData(
+    //TODO: Enable selection of table here based on layer displayed in frontend
+    tableSpecs.TOPO_EDGES,
+    1000000,
+    geometry.coordinates,
+    desiredDistance
+  );
 
-  const { textFileString, vertexToIndexMap, enrichedEdgeData } =
-    getEdgesVertices(edgeData);
+  console.log(edgeData);
 
-  writeRoutingFile('routingTopologies.txt', textFileString, next);
+  // const { textFileString, vertexToIndexMap, enrichedEdgeData } =
+  //   getEdgesVertices(edgeData);
+
+  // writeRoutingFile('routingTopologies.txt', textFileString, next);
 
   return next();
 };

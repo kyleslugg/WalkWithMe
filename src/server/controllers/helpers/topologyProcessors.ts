@@ -20,15 +20,25 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const getTopographicalData = async (
   tableSpec: GeodataTableSpec,
-  weightScaler?: number
+  weightScaler?: number,
+  startingGeom?: (string | number)[],
+  desiredDistance?: number
 ): Promise<GeodataQueryResult> => {
-  const rawQueryData = await query(
-    `select t.${tableSpec.idColumn}${
-      tableSpec.attrColumns
-    }, trunc(ST_Length(t.${tableSpec.geomColumn}) * ${
-      weightScaler ? weightScaler : 1
-    }) as weight from ${tableSpec.table} t`
-  );
+  let geomRestricter = '';
+  if (startingGeom && desiredDistance) {
+    geomRestricter = `WHERE ST_DWithin(t.${tableSpec.geomColumn}::geography, 
+      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), 4326)::geography, ${desiredDistance})`;
+  }
+  const queryText = `select t.${tableSpec.idColumn}${
+    tableSpec.attrColumns
+  }, trunc(ST_Length(t.${tableSpec.geomColumn}) * ${
+    weightScaler ? weightScaler : 1
+  }) as weight 
+    from ${tableSpec.schema}.${tableSpec.table} t
+    ${geomRestricter}
+    `;
+
+  const rawQueryData = await query(queryText);
   //FIXME: Solve PG typing
   //@ts-ignore
   return rawQueryData.rows;

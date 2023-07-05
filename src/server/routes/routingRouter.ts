@@ -5,7 +5,7 @@ import featureGroupController from '../controllers/featureGroupController.js';
 import routingController from '../controllers/routingController.js';
 const router = Router();
 
-router.get(
+router.post(
   '/',
   routingController.formatEdgesNodes,
   (req: Request, res: Response) => {

@@ -8,6 +8,7 @@ import { setSelection } from '../../../store/slices/mapSlice';
 import VectorLayer from 'ol/layer/Vector';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import Map from 'ol/Map';
+import { FeatureSet } from '../../../../types';
 
 const defaultOptions = {
   condition: click,
@@ -47,6 +48,31 @@ const getFeaturesFromLayer = (
   );
 };
 
+const getSelectedFeaturesAndLayer = (
+  map: Map,
+  layerId: string | number | null | undefined,
+  idField: string | null,
+  featureIds: Set<string>
+): [Set<Feature | FeatureLike>, Layer | null] => {
+  const layer = getLayerFromId(layerId, map);
+  return [getFeaturesFromLayer(map, layer, idField, featureIds), layer];
+};
+
+const clearSelection = (
+  selection: Set<Feature | FeatureLike | null>,
+  selectionLayer: Layer | null
+) => {
+  if (selection.size > 0) {
+    selection.forEach((element) => {
+      element.setStyle();
+      selection.delete(element);
+    });
+  }
+  if (selectionLayer) {
+    selectionLayer.changed();
+  }
+};
+
 /**@ref See OpenLayers: ol/interaction/Select */
 export const makeSelector = (options = defaultOptions) => {
   const selector = new Select(options);
@@ -59,7 +85,7 @@ export const makeSelector = (options = defaultOptions) => {
 export const onSelect = (
   e: SelectEvent,
   selector: Select,
-  style = styles.selectedLine
+  style = styles.selectedNode
 ) => {
   const { selectionLayerId, idField, selectionSet } =
     store.getState().mapSlice.selection;
@@ -88,13 +114,7 @@ export const onSelect = (
   if (!e.selected.length) {
     console.log('Empty select');
     if (selection.size > 0) {
-      selection.forEach((element) => {
-        element.setStyle();
-        selection.delete(element);
-      });
-      if (selectionLayer) {
-        selectionLayer.changed();
-      }
+      clearSelection(selection, selectionLayer);
       newSelectionLayerId = null;
       newIdField = null;
       newSelectionIds = new Set();
@@ -108,13 +128,7 @@ export const onSelect = (
       e.selected[0] &&
       selectionLayerId !== selector.getLayer(e.selected[0]).get('layerId')
     ) {
-      selection.forEach((el: FeatureLike) => {
-        el.setStyle();
-        selection.delete(el);
-      });
-      if (selectionLayer) {
-        selectionLayer.changed();
-      }
+      clearSelection(selection, selectionLayer);
       newSelectionLayerId = selector.getLayer(e.selected[0]).get('layerId');
       selectionLayer = getLayerFromId(newSelectionLayerId, map);
       newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
@@ -146,6 +160,24 @@ export const onSelect = (
   );
 };
 
+export const getCurrentSelectedFeaturesAndLayer = (): [
+  Set<Feature | FeatureLike | null>,
+  Layer | null
+] => {
+  const { map, selection } = store.getState().mapSlice;
+  if (!map) return [new Set(), null];
+  return getSelectedFeaturesAndLayer(
+    map,
+    selection.selectionLayerId,
+    selection.idField,
+    selection.selectionSet
+  );
+};
+
+export const clearCurrentSelection = () => {
+  const [selection, layer] = getCurrentSelectedFeatures();
+  clearSelection(selection, layer);
+};
 /*
 const Selector = ({options = defaultOptions, onSelect = onSelect, ...props}) => {
   const {map} = useContext(MapContext);

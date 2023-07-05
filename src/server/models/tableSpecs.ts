@@ -4,7 +4,7 @@ const tableSpecs: { [k: string]: GeodataTableSpec } = {};
 
 tableSpecs.TOPO_EDGES = {
   schema: 'nyccsl_topo',
-  table: 'edges_data',
+  table: 'edge_data',
   srid: '4326',
   idColumn: 'edge_id',
   geomColumn: 'geom',
