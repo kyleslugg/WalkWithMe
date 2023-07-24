@@ -12,7 +12,6 @@ const connectionPool = new Pool({
 
 //FIXME: Fix PG query typing
 const query = (queryString: string, params?: any, callback?: any) => {
-  console.log(queryString);
   return connectionPool.query(queryString, params, callback);
 };
 

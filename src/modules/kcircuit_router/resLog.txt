@@ -1,0 +1,1 @@
+/home/kyle/Documents/Codesmith/_Junior/_Project_Phase/_Solo/src/data/routingTopologies.txt	559	347	0	804	1	2	3	0	1	0	0	0	3	2	0	1	778	9223372036854775807	0.000014	0.000025	778	9223372036854775807	0	0.000025

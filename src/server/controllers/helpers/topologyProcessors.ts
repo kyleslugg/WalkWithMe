@@ -152,14 +152,21 @@ export const runPathFinder = (
 
   //Execute pathfinder module from here
   //-a 3: selects algorithm to use. This uses the Double-Path Heuristic with filtering and selection of random remaining vertex at each stage
-  const execOutput = child
-    .execSync(
-      `cd ${path.resolve(
-        __dirname,
-        '../../../modules/kcircuit_router/'
-      )} | sh kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`
-    )
-    .toString();
+  console.log(
+    `Calling sh kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`
+  );
+  child.exec(
+    `${path.resolve(
+      __dirname,
+      '../../../modules/kcircuit_router/'
+    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 4`,
+    (err: child.ExecException | null, stdout: string, stderr: string) => {
+      if (err) {
+        console.log(err);
+      }
 
-  return execOutput;
+      console.log(stdout);
+      return stdout;
+    }
+  );
 };

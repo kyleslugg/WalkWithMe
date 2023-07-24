@@ -43,13 +43,14 @@ routingController.formatEdgesNodes = async (
     desiredDistance
   );
 
-  console.log(edgeData);
+  console.log('Retrieved Edge Data...');
 
   //Transform the fetched data into edges and vertices for computation
 
   const { textFileString, vertexToIndexMap, enrichedEdgeData } =
     getEdgesVertices(edgeData);
 
+  console.log('Formatted data for routing...');
   //Write properly formatted input file to disk
   const resolvedFilePath = writeRoutingFile(
     'routingTopologies.txt',
@@ -57,15 +58,14 @@ routingController.formatEdgesNodes = async (
     next
   );
 
+  console.log('Wrote data for routing to disk. Calling routing util...');
   //Execute pathfinding algorithm on input file created above
   const processOutput = runPathFinder(
     resolvedFilePath!,
-    desiredDistance,
+    Math.trunc(desiredDistance),
     0,
     next
   );
-
-  console.log(processOutput);
 
   return next();
 };

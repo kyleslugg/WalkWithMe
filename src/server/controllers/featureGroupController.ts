@@ -75,7 +75,7 @@ featureGroupController.saveFeatureGroup = (
   next: NextFunction
 ) => {
   const { groupName, featureIds, sourceTableId, idField } = req.body;
-  console.log(req.body);
+
   if (!featureIds || !sourceTableId || !idField || groupName == '') {
     return next(
       createError({
