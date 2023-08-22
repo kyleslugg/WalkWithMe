@@ -1,0 +1,19 @@
+[package]
+name = "rust-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+error-chain="0.12.4"
+axum="0.6.20"
+reqwest = {version = "0.11.18", features = ["json"]}
+serde = {version = "1.0.183", features = ["derive"]}
+serde_json = "1.0.105"
+tokio = { version = "1.32.0", features = ["macros", "rt-multi-thread"] }
+dotenv_codegen = "0.15.0"
+axum-macros = "0.3.8"
+anyhow = {version = "1.0.75", features = ["backtrace"]}
+postgres = {version = "0.19.6", features = ["array-impls", "with-geo-types-0_7", "with-serde_json-1"]}
+lazy_static = "1.4.0"
