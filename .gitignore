@@ -8,3 +8,4 @@ _GARBAGE_BIN/
 Passeggiata/
 src/data
 modules/kcircuit_router/source
+rust-server/target
