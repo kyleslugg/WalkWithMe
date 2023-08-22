@@ -172,7 +172,10 @@ const MapLayers = () => {
   );
 
   groups.basemaps = [layers.stamenTerrain];
-  groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
+
+  //Taking out excess feature layers for tentative deployment
+  //groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
+  groups.featureLayers = [layers.nyccsl];
 
   const theseLayers = [
     ...groups.basemaps,
