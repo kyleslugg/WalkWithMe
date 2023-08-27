@@ -29,7 +29,8 @@ routingController.formatEdgesNodes = async (
   //Pull edges from database
   console.log(req.body);
   const { geom, unit, dist } = req.body;
-  const geometry = JSON.parse(geom).geometry;
+  //const geometry = JSON.parse(geom).geometry;
+  const geometry = geom.geometry;
   const desiredDistance =
     (unit === 'mins' ? Number(dist) * 0.05 : Number(dist)) *
     1609.34 *
@@ -63,7 +64,8 @@ routingController.formatEdgesNodes = async (
   const processOutput = runPathFinder(
     resolvedFilePath!,
     Math.trunc(desiredDistance),
-    0,
+    //@ts-ignore
+    vertexToIndexMap.get(geom.properties.node_id),
     next
   );
 

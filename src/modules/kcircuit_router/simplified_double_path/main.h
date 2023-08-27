@@ -101,10 +101,10 @@ struct Graph {
 	int n = 0;										//Number of vertices in the graph
 	int m = 0;										//Number of edges in a graph. This figure is only valid if all edges are bidirectional
 	int numDummies = 0;								//Number of dummys added for bridges and articulation points (these come at the end)
-	vector<set<Neighbour, minNeighbour> > AList;	//Adjacency list (each list is a set ordered by vetex)
+	vector<set<Neighbour, minNeighbour> > AList;	//Adjacency list (each list is a set ordered by vertex)
 	vector<string> osmID;							//Actual name of the vertex (used by osm)
 	vector<int> parent;								//If the vertex is a dummy, this number refers to its "parent" vertex. If not, it refers to itself.
-	long long maxEdgeWeight;						//Keeps a record of the largest edge weight in the graph (used for chicking for overflow)
+	long long maxEdgeWeight;						//Keeps a record of the largest edge weight in the graph (used for checking for overflow)
 	long long INF2 = 0;								//Constant used in Bhandari's algorithm for dealing with graphs with connectivity of less than two. Calculated as sum of edge weights plus one
 	set<int> APs;									//Set used to hold all articulation points in the graph
 	set<Edge, minEdge> bridges;						//Set used to hold all bridges {u,v} in the graph

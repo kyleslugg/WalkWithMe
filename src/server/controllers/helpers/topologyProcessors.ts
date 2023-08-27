@@ -28,7 +28,7 @@ export const getTopographicalData = async (
   let geomRestricter = '';
   if (startingGeom && desiredDistance) {
     geomRestricter = `WHERE ST_DWithin(t.${tableSpec.geomColumn}::geography, 
-      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), 4326)::geography, ${desiredDistance})`;
+      ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 4326)::geography, ${desiredDistance})`;
   }
 
   /**Commenting this out for now to test a revised version that uses geography to handle meters conversion */
@@ -40,12 +40,15 @@ export const getTopographicalData = async (
   //   from ${tableSpec.schema}.${tableSpec.table} t
   //   ${geomRestricter}
   //   `;
-  const queryText = `select t.${tableSpec.idColumn}${tableSpec.attrColumns}, trunc(ST_Length(t.${tableSpec.geomColumn}::geography)) as weight 
+  const queryText = `select ${tableSpec.idColumn}, ${tableSpec.attrColumns}, trunc(ST_Length(t.${tableSpec.geomColumn}::geography)) as weight
     from ${tableSpec.schema}.${tableSpec.table} t
     ${geomRestricter}
     `;
 
+  console.log(queryText);
   const rawQueryData = await query(queryText);
+  //@ts-ignore
+  console.dir(rawQueryData!.rows);
   //FIXME: Solve PG typing
   //@ts-ignore
   return rawQueryData.rows;
@@ -68,6 +71,9 @@ export const getEdgesVertices = (
   endNodeID: string = 'end_node',
   weightID: string = 'weight'
 ): EdgeVertexMapper => {
+  //Initialize empty array to hold text file lines
+  let textFileArr: Array<string> = [];
+
   //Extract all relevant nodes in selection from edges, eliminating duplicates
   const vertexSet: Set<string> = new Set();
 
@@ -76,12 +82,7 @@ export const getEdgesVertices = (
     vertexSet.add(row[endNodeID]);
   });
 
-  //Begin constructing string for writing to text file
-  let textFileArr: Array<string> = [];
-  textFileArr.push(`p ${vertexSet.size} ${edgeData.length}\n`);
-
-  //Convert set to object with associated ascending indices, per routing algo's needs
-  //Add vertices to text file string
+  //Map OSM vertices to index
   const vertexToIndex: Map<string, number> = new Map();
 
   let i = 0;
@@ -90,13 +91,25 @@ export const getEdgesVertices = (
     textFileArr.push(`v ${el}\n`);
   });
 
-  //Map start, end nodes for edges on to indexed vertices
+  //Map start, end nodes for edges onto indexed vertices
+  //Add edges to edge set, to eliminate possible duplicates
+  const edgeSet: Set<string> = new Set();
   //Add edges to text file string
   edgeData.forEach((row: { [s: string]: any }) => {
     row.u = vertexToIndex.get(row[startNodeID]);
     row.v = vertexToIndex.get(row[endNodeID]);
-    textFileArr.push(`e ${row.u} ${row.v} ${row[weightID]}\n`);
+    if (
+      !edgeSet.has(`[${row.u}, ${row.v}]`) &&
+      !edgeSet.has(`[${row.v}, ${row.u}]`)
+    ) {
+      textFileArr.push(`e ${row.u} ${row.v} ${row[weightID]}\n`);
+      edgeSet.add(`[${row.u}, ${row.v}]`);
+    }
   });
+
+  //Prepend size information to text file lines array
+
+  textFileArr.unshift(`p ${vertexSet.size} ${edgeSet.size}\n`);
 
   //Package up returns
 
@@ -159,14 +172,22 @@ export const runPathFinder = (
     `${path.resolve(
       __dirname,
       '../../../modules/kcircuit_router/'
-    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 4`,
+    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`,
     (err: child.ExecException | null, stdout: string, stderr: string) => {
       if (err) {
         console.log(err);
       }
 
       console.log(stdout);
+      console.log(stderr);
       return stdout;
     }
   );
+};
+
+//WORKING ON THIS NOW
+export const interpretPathFinderResults = () => {
+  //The gist is that we need to go from a list of consecutive vertices to
+  //a set of ordered features. So, for each pair list[i], list[i+1], find the edge
+  //where starting_node = list[i] and ending_node = list[i+1]
 };
