@@ -9,7 +9,7 @@ router.post(
   '/',
   routingController.formatEdgesNodes,
   (req: Request, res: Response) => {
-    res.sendStatus(200);
+    res.status(200).json(res.locals.pathGeoms);
   }
 );
 

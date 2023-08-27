@@ -4,10 +4,13 @@ import {
   getTopographicalData,
   getEdgesVertices,
   writeRoutingFile,
-  runPathFinder
+  runPathFinder,
+  readPathFinderResults,
+  pathFinderResultsToEdges,
+  getPathGeometriesFromEdges
 } from './helpers/topologyProcessors.js';
 import tableSpecs from '../models/tableSpecs.js';
-import * as path from 'path';
+import { tableUid } from '../../utils.js';
 
 //Create module-level error handler
 export const createError = (errorSpec: MiddlewareErrorSpec) => {
@@ -36,6 +39,8 @@ routingController.formatEdgesNodes = async (
     1609.34 *
     (2.0 / 3.0);
 
+  const transaction_uuid = tableUid();
+
   const edgeData = await getTopographicalData(
     //TODO: Enable selection of table here based on layer displayed in frontend
     tableSpecs.TOPO_EDGES,
@@ -48,8 +53,12 @@ routingController.formatEdgesNodes = async (
 
   //Transform the fetched data into edges and vertices for computation
 
-  const { textFileString, vertexToIndexMap, enrichedEdgeData } =
-    getEdgesVertices(edgeData);
+  const {
+    textFileString,
+    vertexToIndexMap,
+    enrichedEdgeData,
+    nodePairEdgeMapper
+  } = getEdgesVertices(edgeData);
 
   console.log('Formatted data for routing...');
   //Write properly formatted input file to disk
@@ -61,13 +70,27 @@ routingController.formatEdgesNodes = async (
 
   console.log('Wrote data for routing to disk. Calling routing util...');
   //Execute pathfinding algorithm on input file created above
-  const processOutput = runPathFinder(
+  const processOutput = await runPathFinder(
     resolvedFilePath!,
     Math.trunc(desiredDistance),
     //@ts-ignore
     vertexToIndexMap.get(geom.properties.node_id),
     next
   );
+
+  const pathOptions = readPathFinderResults('routingTopologies.txt', next);
+
+  const pathOptionEdges: (Number | undefined)[][] = pathFinderResultsToEdges(
+    pathOptions,
+    nodePairEdgeMapper
+  );
+
+  res.locals.pathGeoms = [];
+  for (const path of pathOptionEdges) {
+    //@ts-ignore
+    const geom = await getPathGeometriesFromEdges(path, tableSpecs.TOPO_EDGES);
+    res.locals.pathGeoms.push(geom);
+  }
 
   return next();
 };

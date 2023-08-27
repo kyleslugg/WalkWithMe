@@ -40,3 +40,25 @@ Error. Corruption on line 2346. Edge {866, 865} is already defined. Exiting...
 Error. Corruption on line 3429. Edge {122, 120} is already defined. Exiting...
 Error. Corruption on line 3429. Edge {1245, 1306} is already defined. Exiting...
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	374	2145	1	2	3	0	1	0	0	0	213	324	0	75	2121	2166	0.002905	0.003504	2121	2166	0	0.003506
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	361	2145	1	2	3	0	1	0	0	0	213	324	0	63	2121	2166	0.003795	0.004116	2121	2166	0	0.004116
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	504	2145	1	2	3	0	1	0	0	0	213	324	0	65	2121	2166	0.003276	0.003521	2121	2166	0	0.003521
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	326	2145	1	2	3	0	1	0	0	0	213	324	0	70	2121	2166	0.001589	0.003230	2121	2166	0	0.003231
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	551	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000598	0.002717	2121	2166	0	0.002718
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	309	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000585	0.002757	2121	2166	0	0.002759
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	348	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000577	0.003239	2121	2166	0	0.003242
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	505	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000533	0.002851	2121	2166	0	0.002854
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	379	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000588	0.002754	2121	2166	0	0.002755
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	567	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000391	0.002477	2121	2166	0	0.002478
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	626	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000653	0.003502	2121	2166	0	0.003504
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	637	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000517	0.002573	2121	2166	0	0.002575
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	395	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000508	0.002867	2121	2166	0	0.002869
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	654	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000514	0.002579	2121	2166	0	0.002579
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000499	0.002681	2121	2166	0	0.002685
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000491	0.002553	2121	2166	0	0.002554
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000543	0.002743	2121	2166	0	0.002745
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000435	0.002190	2121	2166	0	0.002190
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000547	0.002664	2121	2166	0	0.002665
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000423	0.002147	2121	2166	0	0.002147
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000500	0.002670	2121	2166	0	0.002670
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000440	0.002891	2121	2166	0	0.002894
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000475	0.002560	2121	2166	0	0.002560

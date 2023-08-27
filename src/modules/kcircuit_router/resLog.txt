@@ -7,3 +7,4 @@
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	3343	2122	39	21450	1	2	1	0	1	2	0	0	3	2	0	2	468	9223372036854775807	0.000025	0.000043	468	9223372036854775807	0	0.000056
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	3343	2122	39	21450	1	2	1	0	1	3	0	0	3	2	0	2	468	9223372036854775807	0.000019	0.000038	468	9223372036854775807	0	0.000049
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	3343	2122	39	21450	1	2	1	0	1	4	0	0	3	2	0	2	468	9223372036854775807	0.000010	0.000020	468	9223372036854775807	0	0.000025
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	551	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.001326	0.005288	2121	2166	0	0.005289

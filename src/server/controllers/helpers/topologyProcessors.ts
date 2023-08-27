@@ -1,17 +1,22 @@
 import {
   GeodataQueryResult,
   EdgeVertexMapper,
-  GeodataTableSpec
+  GeodataTableSpec,
+  JSON,
+  NodePairEdgeMapper
 } from '../../../types.js';
 import { createError } from '../routingController.js';
 import query from '../../models/geodataModel.js';
+import { uuidv4 } from '../../../utils.js';
 import { NextFunction } from 'express';
 import * as child from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
+import * as util from 'util';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const exec = util.promisify(child.exec);
 
 /**Fetches edge data from a valid topographical table in PostGres
  * @name getTopographicalData
@@ -40,15 +45,12 @@ export const getTopographicalData = async (
   //   from ${tableSpec.schema}.${tableSpec.table} t
   //   ${geomRestricter}
   //   `;
-  const queryText = `select ${tableSpec.idColumn}, ${tableSpec.attrColumns}, trunc(ST_Length(t.${tableSpec.geomColumn}::geography)) as weight
+  const proximalFeaturesQuery = `select ${tableSpec.idColumn}, ${tableSpec.attrColumns}, trunc(ST_Length(t.${tableSpec.geomColumn}::geography)) as weight
     from ${tableSpec.schema}.${tableSpec.table} t
     ${geomRestricter}
     `;
 
-  console.log(queryText);
-  const rawQueryData = await query(queryText);
-  //@ts-ignore
-  console.dir(rawQueryData!.rows);
+  const rawQueryData = await query(proximalFeaturesQuery);
   //FIXME: Solve PG typing
   //@ts-ignore
   return rawQueryData.rows;
@@ -67,6 +69,7 @@ export const getTopographicalData = async (
 
 export const getEdgesVertices = (
   edgeData: GeodataQueryResult,
+  edgeId: string = 'edge_id',
   startNodeID: string = 'start_node',
   endNodeID: string = 'end_node',
   weightID: string = 'weight'
@@ -74,12 +77,22 @@ export const getEdgesVertices = (
   //Initialize empty array to hold text file lines
   let textFileArr: Array<string> = [];
 
+  //Initialize mapper that will later translate node pairs back to edges
+  const nodePairToEdgeMapper: NodePairEdgeMapper = new Map();
   //Extract all relevant nodes in selection from edges, eliminating duplicates
   const vertexSet: Set<string> = new Set();
 
   edgeData.forEach((row: { [s: string]: any }) => {
     vertexSet.add(row[startNodeID]);
     vertexSet.add(row[endNodeID]);
+    nodePairToEdgeMapper.set(
+      JSON.stringify([row[startNodeID], row[endNodeID]]),
+      row[edgeId]
+    );
+    nodePairToEdgeMapper.set(
+      JSON.stringify([row[endNodeID], row[startNodeID]]),
+      row[edgeId]
+    );
   });
 
   //Map OSM vertices to index
@@ -116,7 +129,8 @@ export const getEdgesVertices = (
   const returnPackage: EdgeVertexMapper = {
     textFileString: textFileArr.join(''),
     vertexToIndexMap: vertexToIndex,
-    enrichedEdgeData: edgeData
+    enrichedEdgeData: edgeData,
+    nodePairEdgeMapper: nodePairToEdgeMapper
   };
 
   return returnPackage;
@@ -151,7 +165,7 @@ export const writeRoutingFile = (
   }
 };
 
-export const runPathFinder = (
+export const runPathFinder = async (
   filePath: string,
   targetLength: number,
   sourceVertex: number,
@@ -165,29 +179,100 @@ export const runPathFinder = (
 
   //Execute pathfinder module from here
   //-a 3: selects algorithm to use. This uses the Double-Path Heuristic with filtering and selection of random remaining vertex at each stage
-  console.log(
-    `Calling sh kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`
-  );
-  child.exec(
+
+  return exec(
     `${path.resolve(
       __dirname,
       '../../../modules/kcircuit_router/'
-    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex} -a 3`,
-    (err: child.ExecException | null, stdout: string, stderr: string) => {
-      if (err) {
-        console.log(err);
-      }
-
-      console.log(stdout);
-      console.log(stderr);
+    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex}`
+  )
+    .then((stdout) => {
       return stdout;
-    }
-  );
+    })
+    .catch((e) => {
+      console.log(e);
+      // return next(
+      //   createError({
+      //     method: 'runPathFinder',
+      //     log: `Encountered error while running router: ${e}`,
+      //     status: 500
+      //   })
+      // );
+    });
 };
 
+export const readPathFinderResults = (
+  rootFileName: String,
+  next: NextFunction
+) => {
+  try {
+    const contents = fs
+      .readFileSync(
+        path.resolve(__dirname, `../../../data/${rootFileName}_sol.txt`)
+      )
+      .toString();
+    //console.log(contents);
+    return JSON.parse(contents);
+  } catch (error) {
+    return next(
+      createError({
+        method: 'readPathFinderResults',
+        log: `Encountered error while reading pathfinder results from file: ${error}`,
+        status: 500
+      })
+    );
+  }
+};
 //WORKING ON THIS NOW
-export const interpretPathFinderResults = () => {
+export const pathFinderResultsToEdges = (
+  pathOptions: Array<Array<String | Number>>,
+  nodePairEdgeMapper: NodePairEdgeMapper
+) => {
   //The gist is that we need to go from a list of consecutive vertices to
   //a set of ordered features. So, for each pair list[i], list[i+1], find the edge
   //where starting_node = list[i] and ending_node = list[i+1]
+
+  const edgeListHolder = [];
+
+  for (const path of pathOptions) {
+    const edgeList = [];
+    for (let i = 0; i < path.length - 1; i++) {
+      edgeList.push(
+        nodePairEdgeMapper.get(JSON.stringify([path[i], path[i + 1]]))
+      );
+    }
+    edgeListHolder.push(edgeList);
+  }
+  console.dir(edgeListHolder);
+  return edgeListHolder;
+};
+
+export const getPathGeometriesFromEdges = async (
+  edgeList: Number[],
+  edgeTable: GeodataTableSpec
+) => {
+  const { idColumn, geomColumn, table, schema } = edgeTable;
+  const fgQuery = `select
+	st_asgeojson(c.*)::json as geoms
+  from
+	(
+	select
+		ST_Collect(
+      array(
+		select
+			ST_Transform(t.${geomColumn},
+			3857) as geom
+		from
+			${schema}.${table} t
+		where
+			t.${idColumn} in (${edgeList.join(', ')})
+        )
+      )
+    ) c;`;
+
+  console.log(fgQuery);
+  const results = await query(fgQuery);
+
+  //@ts-ignore
+  return results.rows[0];
 };

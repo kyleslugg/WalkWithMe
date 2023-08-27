@@ -26,7 +26,10 @@ export type EdgeVertexMapper = {
   textFileString: string;
   vertexToIndexMap: Map<string, number>;
   enrichedEdgeData: GeodataQueryResult;
+  nodePairEdgeMapper: NodePairEdgeMapper;
 };
+
+export type NodePairEdgeMapper = Map<String, Number>;
 
 export type FeatureSet = Set<string>;
 //TODO: Elaborate on this result, perhaps building on PG types
