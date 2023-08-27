@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   '/',
-  routingController.formatEdgesNodes,
+  routingController.generateRoute,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.pathGeoms);
   }

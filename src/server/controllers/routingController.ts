@@ -24,7 +24,7 @@ export const createError = (errorSpec: MiddlewareErrorSpec) => {
 
 const routingController: Controller<RequestHandler> = {};
 
-routingController.formatEdgesNodes = async (
+routingController.generateRoute = async (
   req: Request,
   res: Response,
   next: NextFunction
