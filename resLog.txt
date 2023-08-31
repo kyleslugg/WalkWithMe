@@ -65,3 +65,43 @@ Error. Corruption on line 3429. Edge {1245, 1306} is already defined. Exiting...
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	123	177	22	536	1	2	1	0	1	0	0	0	14	15	0	7	519	590	0.000173	0.000376	519	590	0	0.000377
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	136	192	118	536	1	2	1	0	1	0	0	0	34	43	0	13	533	567	0.000245	0.000542	533	567	0	0.000543
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	123	177	20	536	1	2	1	0	1	0	0	0	14	15	0	7	519	590	0.000107	0.000216	519	590	0	0.000217
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	239	362	184	804	1	2	1	0	1	0	0	0	32	43	0	16	721	806	0.000093	0.000183	721	806	0	0.000183
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	337	510	1	1072	1	2	1	0	1	0	0	0	65	97	0	33	1049	1075	0.000326	0.000579	1049	1075	0	0.000579
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	350	536	177	1072	1	2	1	0	1	0	0	0	41	58	0	20	1052	1119	0.000142	0.000258	1052	1119	0	0.000258
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	218	320	36	804	1	2	1	0	1	0	0	0	17	21	0	10	789	864	0.000076	0.000093	789	864	0	0.000093
+Error. Corruption on line 4347 when reading an edge. Exiting...
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	376	573	308	1072	1	2	1	0	1	0	0	0	40	56	0	19	1062	1134	0.000508	0.000650	1062	1134	0	0.000651
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	376	573	175	1072	1	2	1	0	1	0	0	0	40	56	0	19	1062	1134	0.000653	0.000837	1062	1134	0	0.000837
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	218	320	96	804	1	2	1	0	1	0	0	0	20	25	0	12	789	837	0.000163	0.000183	789	837	0	0.000183
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	90	127	61	536	1	2	1	0	1	0	0	0	7	6	0	4	468	9223372036854775807	0.000019	0.000048	468	9223372036854775807	0	0.000049
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	100	142	34	536	1	2	1	0	1	0	0	0	10	12	0	6	468	539	0.000048	0.000112	468	539	0	0.000112
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	229	349	140	804	1	2	1	0	1	0	0	0	17	20	0	12	666	863	0.000160	0.000186	666	863	0	0.000187
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	84	121	28	536	1	2	1	0	1	0	0	0	7	6	0	4	468	9223372036854775807	0.000012	0.000033	468	9223372036854775807	0	0.000033
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	127	184	31	536	1	2	1	0	1	0	0	0	14	14	0	5	516	582	0.000059	0.000075	516	582	0	0.000076
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	102	142	72	536	1	2	1	0	1	0	0	0	10	12	0	4	501	558	0.000037	0.000061	501	558	0	0.000062
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	521	825	443	1341	1	2	1	0	1	0	0	0	68	102	0	24	1338	1406	0.000522	0.000997	1338	1406	0	0.000998
+Error. Corruption on line 603 when reading an edge. Exiting...
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	347	536	138	1072	1	2	1	0	1	0	0	0	53	73	0	18	1067	1125	0.000354	0.000498	1067	1125	0	0.000499
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	631	979	529	1609	1	2	1	0	1	0	0	0	104	155	0	40	1594	1612	0.000769	0.001638	1594	1612	0	0.001638
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	553	879	138	1341	1	2	1	0	1	0	0	0	84	117	0	33	1331	1379	0.000803	0.001146	1331	1379	0	0.001147
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	539	860	261	1341	1	2	1	0	1	0	0	0	58	85	0	25	1331	1365	0.001227	0.001276	1331	1365	0	0.001276
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	340	528	186	1072	1	2	1	0	1	0	0	0	52	71	0	20	1068	1084	0.000280	0.000602	1068	1084	0	0.000603
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	347	535	279	1072	1	2	1	0	1	0	0	0	47	70	0	15	1062	1084	0.000246	0.000430	1062	1084	0	0.000430
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	360	551	48	1072	1	2	1	0	1	0	0	0	41	59	0	17	1062	1075	0.000132	0.000454	1062	1075	0	0.000455
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	360	551	234	1072	1	2	1	0	1	0	0	0	41	59	0	17	1062	1075	0.000128	0.000382	1062	1075	0	0.000382
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	360	551	223	1072	1	2	1	0	1	0	0	0	41	59	0	17	1062	1075	0.000129	0.000440	1062	1075	0	0.000442
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	470	751	305	1341	1	2	1	0	1	0	0	0	63	91	0	25	1337	1348	0.000618	0.000783	1337	1348	0	0.000784
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	332	515	217	1072	1	2	1	0	1	0	0	0	50	67	0	28	1053	1087	0.000775	0.000820	1053	1087	0	0.000821
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	225	339	72	804	1	2	1	0	1	0	0	0	22	25	0	16	729	817	0.000378	0.000414	729	817	0	0.000415
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	201	295	140	804	1	2	1	0	1	0	0	0	33	45	0	17	797	820	0.000156	0.000296	797	820	0	0.000296
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	501	793	175	1341	1	2	1	0	1	0	0	0	82	117	0	27	1335	1345	0.000786	0.001423	1335	1345	0	0.001423
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	521	826	93	1341	1	2	1	0	1	0	0	0	76	111	0	23	1335	1405	0.000860	0.001436	1335	1405	0	0.001437
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	396	609	365	1072	1	2	1	0	1	0	0	0	43	60	0	14	1068	1117	0.000289	0.000408	1068	1117	0	0.000409
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	401	618	88	1072	1	2	1	0	1	0	0	0	33	44	0	15	1061	1133	0.000215	0.000357	1061	1133	0	0.000357
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	563	887	532	1341	1	2	1	0	1	0	0	0	65	96	0	22	1335	1404	0.000715	0.000770	1335	1404	0	0.000770
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	207	306	54	804	1	2	1	0	1	0	0	0	24	32	0	12	790	832	0.000165	0.000215	790	832	0	0.000216
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	333	510	128	1072	1	2	1	0	1	0	0	0	43	57	0	22	1034	1074	0.000307	0.000903	1034	1074	0	0.000904
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	338	521	4	1072	1	2	1	0	1	0	0	0	35	47	0	24	993	1142	0.000285	0.000372	993	1142	0	0.000372
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	395	612	87	1072	1	2	1	0	1	0	0	0	33	44	0	16	1062	1134	0.000197	0.000311	1062	1134	0	0.000312
+Error. Corruption on line 7445 when reading an edge. Exiting...
+Error. Corruption on line 7597 when reading an edge. Exiting...

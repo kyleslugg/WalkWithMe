@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ReactNode } from 'react';
+import GeoJSON from 'ol/format/GeoJSON';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
 
 interface UserFeatureState {
   userFeatures: (ReactNode | null)[];
-  walkingPaths: (ReactNode | null)[];
+  walkingPaths: Feature<Geometry>[];
 }
 
 const initialState: UserFeatureState = {
@@ -18,7 +21,7 @@ export const userFeatureSlice = createSlice({
     setUserFeatures: (state, action: PayloadAction<(ReactNode | null)[]>) => {
       state.userFeatures = action.payload;
     },
-    setWalkingPaths: (state, action: PayloadAction<(ReactNode | null)[]>) => {
+    setWalkingPaths: (state, action: PayloadAction<Feature<Geometry>[]>) => {
       state.walkingPaths = action.payload;
     }
   }

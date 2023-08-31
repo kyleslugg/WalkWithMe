@@ -271,8 +271,13 @@ export const getPathGeometriesFromEdges = async (
     ) c;`;
 
   console.log(fgQuery);
-  const results = await query(fgQuery);
+  let results;
 
-  //@ts-ignore
-  return results.rows[0];
+  try {
+    results = await query(fgQuery);
+    //@ts-ignore
+    return results.rows[0].geoms;
+  } catch {
+    return new Error('Failed to complete feature query');
+  }
 };

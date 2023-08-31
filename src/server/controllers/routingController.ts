@@ -11,6 +11,7 @@ import {
 } from './helpers/topologyProcessors.js';
 import tableSpecs from '../models/tableSpecs.js';
 import { tableUid } from '../../utils.js';
+import { create } from 'ol/transform.js';
 
 //Create module-level error handler
 export const createError = (errorSpec: MiddlewareErrorSpec) => {
@@ -86,10 +87,20 @@ routingController.generateRoute = async (
     nodePairEdgeMapper
   );
 
-  res.locals.pathGeoms = [];
+  res.locals.pathGeoms = []; //{ type: 'FeatureCollection', features: [] };
   for (const path of pathOptionEdges) {
     //@ts-ignore
     const geom = await getPathGeometriesFromEdges(path, tableSpecs.TOPO_EDGES);
+
+    if (geom instanceof Error) {
+      return next(
+        createError({
+          method: 'generateRoute',
+          log: 'Encountered error while transforming results to GeoJSON',
+          status: 500
+        })
+      );
+    }
     res.locals.pathGeoms.push(geom);
   }
 

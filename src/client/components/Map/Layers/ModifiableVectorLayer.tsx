@@ -10,8 +10,6 @@ const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
   options,
   style
 }) => {
-  const [features, setFeatures] = useState<FeatureSet>({});
-
   const vlayer = new VectorLayer({
     ...options,
     style: style,
@@ -22,9 +20,9 @@ const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
     if (!map) return;
 
     map.addLayer(vlayer);
-    source.on('addfeature', () => {
+    source?.on('change', () => {
       console.log('Layer source changed');
-
+      console.log(source?.getFeatures());
       vlayer.changed();
     });
   }, [map]);
