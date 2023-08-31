@@ -19,12 +19,12 @@ export interface GeodataTableSpec {
   srid: string;
   idColumn: string;
   geomColumn: string;
-  attrColumns: string | string[];
+  attrColumns: string[];
 }
 
 export type EdgeVertexMapper = {
   textFileString: string;
-  vertexToIndexMap: Map<string, number>;
+  vertexToIndexMap: Map<string | number, number>;
   enrichedEdgeData: GeodataQueryResult;
   nodePairEdgeMapper: NodePairEdgeMapper;
 };
@@ -51,6 +51,7 @@ export interface LayerDefinitionSet<T> {
 export interface LayerProps<SourceType extends Source> {
   map: OLMap | null;
   layerId: string | number;
+  idField: string;
   modLayerInd?: boolean;
   source?: SourceType;
   sourceTableId?: string;

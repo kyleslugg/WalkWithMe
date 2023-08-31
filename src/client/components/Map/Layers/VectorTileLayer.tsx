@@ -8,6 +8,7 @@ const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
   source,
   sourceTableId,
   layerId,
+  idField,
   style = {},
   zIndex = 0,
   options = {},
@@ -23,6 +24,7 @@ const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
   });
 
   vtLayer.set('layerId', layerId);
+  vtLayer.set('idField', idField);
 
   //FIXME: These group functions do not currently work. Fix as part of implementation of layer groups.
   useEffect(() => {
@@ -32,7 +34,6 @@ const VectorTileLayer: FC<LayerProps<VectorTileSource>> = ({
       addToGroup(vtLayer);
     } else {
       map.addLayer(vtLayer);
-      console.dir(vtLayer);
     }
     vtLayer.setZIndex(zIndex);
     vtLayer.setProperties({ sourceTableId });

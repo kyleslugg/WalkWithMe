@@ -28,6 +28,7 @@ const App = () => {
       <MapLayers />
       <Locator>
         <FeatureSaveLoad />
+        <GenerateWalkingPath />
       </Locator>
       <MapControls />
     </MapWrapper>

@@ -5,10 +5,9 @@ import Layer from 'ol/layer/Layer';
 import Feature, { FeatureLike } from 'ol/Feature';
 import { store } from '../../../store/store';
 import { setSelection } from '../../../store/slices/mapSlice';
-import VectorLayer from 'ol/layer/Vector';
+
 import VectorTileLayer from 'ol/layer/VectorTile';
 import Map from 'ol/Map';
-import { FeatureSet } from '../../../../types';
 
 const defaultOptions = {
   condition: click,
@@ -20,6 +19,12 @@ const defaultOptions = {
   hitTolerance: 2
 };
 
+/**
+ * Retrieves a layer from a map based on its layer ID.
+ * @param layerId - The ID of the layer to retrieve.
+ * @param map - The map object containing the layers.
+ * @returns The layer with the specified ID, or null if not found.
+ */
 const getLayerFromId = (
   layerId: string | number | null | undefined,
   map: Map
@@ -30,6 +35,15 @@ const getLayerFromId = (
     .filter((layer) => layer.get('layerId') === layerId)[0];
 };
 
+/**
+ * Retrieves a set of features from a vector layer based on a set of feature IDs.
+ *
+ * @param {Map} map - The map object.
+ * @param {VectorTileLayer | null} layer - The vector tile layer.
+ * @param {string | null} idField - The field used as the feature ID.
+ * @param {Set<string>} featureIds - The set of feature IDs to retrieve.
+ * @returns {Set<FeatureLike>} - The set of features matching the provided feature IDs.
+ */
 const getFeaturesFromLayer = (
   map: Map,
   layer: VectorTileLayer | null,
@@ -39,8 +53,8 @@ const getFeaturesFromLayer = (
   if (!idField || !layer) return new Set();
   const source = layer.getSource();
 
-  //Problem here is that, while vector layers have a features property as below, vector tiles access features
-  //through the getFeaturesInExtent() property, so we need to distinguish between layer types here
+  // Problem here is that, while vector layers have a features property as below, vector tiles access features
+  // through the getFeaturesInExtent() property, so we need to distinguish between layer types here
   return new Set(
     source
       ?.getFeaturesInExtent(map.getView().calculateExtent())
@@ -48,7 +62,7 @@ const getFeaturesFromLayer = (
   );
 };
 
-const getSelectedFeaturesAndLayer = (
+export const getSelectedFeaturesAndLayer = (
   map: Map,
   layerId: string | number | null | undefined,
   idField: string | null,
@@ -58,6 +72,12 @@ const getSelectedFeaturesAndLayer = (
   return [getFeaturesFromLayer(map, layer, idField, featureIds), layer];
 };
 
+/**
+ * Clears the selection by removing the style from each selected element and updating the selection layer.
+ *
+ * @param selection - The set of selected features or feature likes.
+ * @param selectionLayer - The layer containing the selected features.
+ */
 const clearSelection = (
   selection: Set<Feature | FeatureLike | null>,
   selectionLayer: Layer | null
@@ -73,7 +93,14 @@ const clearSelection = (
   }
 };
 
-/**@ref See OpenLayers: ol/interaction/Select */
+/**
+ * Creates a new OpenLayers selector interaction.
+ *
+ * @param options - The options for the selector interaction. Default is 'defaultOptions'.
+ * @returns The created selector interaction.
+ *
+ * @ref See OpenLayers: ol/interaction/Select
+ */
 export const makeSelector = (options = defaultOptions) => {
   const selector = new Select(options);
   selector.on('select', (e: SelectEvent) => {
@@ -82,11 +109,7 @@ export const makeSelector = (options = defaultOptions) => {
   return selector;
 };
 
-export const onSelect = (
-  e: SelectEvent,
-  selector: Select,
-  style = styles.selectedNode
-) => {
+export const onSelect = (e: SelectEvent, selector: Select) => {
   const { selectionLayerId, idField, selectionSet } =
     store.getState().mapSlice.selection;
 
@@ -123,7 +146,7 @@ export const onSelect = (
     if (e.selected[0] && !selectionLayerId) {
       newSelectionLayerId = selector.getLayer(e.selected[0]).get('layerId');
       selectionLayer = getLayerFromId(newSelectionLayerId, map);
-      newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
+      newIdField = selector.getLayer(e.selected[0]).get('idField');
     } else if (
       e.selected[0] &&
       selectionLayerId !== selector.getLayer(e.selected[0]).get('layerId')
@@ -131,7 +154,7 @@ export const onSelect = (
       clearSelection(selection, selectionLayer);
       newSelectionLayerId = selector.getLayer(e.selected[0]).get('layerId');
       selectionLayer = getLayerFromId(newSelectionLayerId, map);
-      newIdField = 'osm_id' in e.selected[0].getProperties() ? 'osm_id' : 'id';
+      newIdField = selector.getLayer(e.selected[0]).get('idField');
     }
 
     for (const feature of e.selected) {
@@ -139,7 +162,11 @@ export const onSelect = (
     }
 
     selection.forEach((feature) => {
-      feature.setStyle(style);
+      feature.setStyle(
+        feature.getGeometry()?.getType() == 'Point'
+          ? styles.selectedNode
+          : styles.selectedLine
+      );
     });
 
     if (selectionLayer) {
@@ -160,11 +187,21 @@ export const onSelect = (
   );
 };
 
+/**
+ * Handles the selection of features on the map.
+ *
+ * @param {SelectEvent} e - The select event object.
+ * @param {Select} selector - The selector object.
+ * @returns {void}
+ */
+
 export const getCurrentSelectedFeaturesAndLayer = (): [
   Set<Feature | FeatureLike | null>,
   Layer | null
 ] => {
   const { map, selection } = store.getState().mapSlice;
+  //console.log(map);
+  console.log(selection);
   if (!map) return [new Set(), null];
   return getSelectedFeaturesAndLayer(
     map,
@@ -174,6 +211,11 @@ export const getCurrentSelectedFeaturesAndLayer = (): [
   );
 };
 
+/**
+ * Clears the current selection of features on a map.
+ *
+ * @returns {void} None
+ */
 export const clearCurrentSelection = () => {
   const [selection, layer] = getCurrentSelectedFeatures();
   clearSelection(selection, layer);

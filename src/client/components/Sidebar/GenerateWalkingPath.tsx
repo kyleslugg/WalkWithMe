@@ -12,15 +12,13 @@ import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/MapLayers';
 import {
-  getCurrentSelectedFeaturesAndLayer,
+  getSelectedFeaturesAndLayer,
   clearCurrentSelection
 } from '../Map/Controls/Selector';
 import Feature, { FeatureLike } from 'ol/Feature';
 
 const GenerateWalkingPath = () => {
-  const selection = useSelector((state: RootState) => state.mapSlice.selection);
-  const map = useSelector((state: RootState) => state.mapSlice.map);
-
+  const { selection, map } = useSelector((state: RootState) => state.mapSlice);
   const [unit, setUnit] = useState<string>('mins');
 
   //Identify fields
@@ -29,8 +27,15 @@ const GenerateWalkingPath = () => {
 
   //Check if selection consists of one and only one node
   const checkSelectionForNode = (): Feature | FeatureLike | null => {
-    const [selection, _] = getCurrentSelectedFeaturesAndLayer();
-    const featureArr: (Feature | FeatureLike | null)[] = [...selection];
+    if (!map) return null;
+    const [featureSelection, featureLayer] = getSelectedFeaturesAndLayer(
+      map,
+      selection.selectionLayerId,
+      selection.idField,
+      selection.selectionSet
+    );
+    console.log(featureSelection);
+    const featureArr: (Feature | FeatureLike | null)[] = [...featureSelection];
     if (!featureArr.length || featureArr.length > 1) {
       return null;
     }

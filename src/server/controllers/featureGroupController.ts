@@ -69,13 +69,14 @@ featureGroupController.getFeatureGroupByID = (
   });
 };
 
+//TODO: Replace the use of SourceTableId here with a direct reference to the incoming path
 featureGroupController.saveFeatureGroup = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { groupName, featureIds, sourceTableId, idField } = req.body;
-
+  console.log(JSON.stringify(req.body));
   if (!featureIds || !sourceTableId || !idField || groupName == '') {
     return next(
       createError({

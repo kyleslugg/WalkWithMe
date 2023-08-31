@@ -8,7 +8,7 @@ tableSpecs.TOPO_EDGES = {
   srid: '4326',
   idColumn: 'edge_id',
   geomColumn: 'geom',
-  attrColumns: ' start_node, end_node'
+  attrColumns: ['start_node', 'end_node']
 };
 
 tableSpecs.TOPO_NODES = {
@@ -17,7 +17,7 @@ tableSpecs.TOPO_NODES = {
   srid: '4326',
   idColumn: 'node_id',
   geomColumn: 'geom',
-  attrColumns: ''
+  attrColumns: []
 };
 
 tableSpecs.EDGES = {
@@ -26,7 +26,7 @@ tableSpecs.EDGES = {
   srid: '4326',
   idColumn: 'gid',
   geomColumn: 'the_geom',
-  attrColumns: 'osm_id, source, target'
+  attrColumns: ['osm_id', 'source', 'target']
 };
 
 tableSpecs.NODES = {
@@ -35,7 +35,7 @@ tableSpecs.NODES = {
   srid: '4326',
   idColumn: 'id',
   geomColumn: 'the_geom',
-  attrColumns: 'osm_id'
+  attrColumns: ['osm_id']
 };
 
 tableSpecs.NYCCSL = {
@@ -44,7 +44,7 @@ tableSpecs.NYCCSL = {
   srid: '4326',
   idColumn: 'id',
   geomColumn: 'geom',
-  attrColumns: 'full_stree, l_low_hn, r_low_hn'
+  attrColumns: ['full_stree', 'l_low_hn', 'r_low_hn']
 };
 
 tableSpecs.FEATURE_GROUPS = {
@@ -53,7 +53,7 @@ tableSpecs.FEATURE_GROUPS = {
   srid: '4326',
   idColumn: 'id',
   geomColumn: 'geom',
-  attrColumns: 'group_name'
+  attrColumns: ['group_name']
 };
 
 tableSpecs.BK_TEST = {
@@ -62,7 +62,7 @@ tableSpecs.BK_TEST = {
   srid: '4326',
   idColumn: 'edge_id',
   geomColumn: 'geom',
-  attrColumns: 'start_node, end_node'
+  attrColumns: ['start_node', 'end_node']
 };
 
 export const tableLookup: { [k: string]: string } = {};

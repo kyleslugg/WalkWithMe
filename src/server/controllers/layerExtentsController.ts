@@ -38,7 +38,13 @@ const checkCoords = (tile: Tile, next: NextFunction): Boolean | void => {
   return true;
 };
 
-//https://postgis.net/docs/ST_TileEnvelope.html
+/**
+ * Converts tile coordinates to a string representing the tile bounds in PostGIS format.
+ *
+ * @param tile - The tile object containing the zoom, x, and y coordinates.
+ * @param margin - Optional margin value to expand the tile bounds.
+ * @returns A string representing the tile bounds in PostGIS format.
+ */
 const coordsToTileBounds = function (tile: Tile, margin?: number): string {
   const { zoom, x, y } = tile;
   const worldMercMax = 20037508.3427892;
@@ -49,15 +55,22 @@ const coordsToTileBounds = function (tile: Tile, margin?: number): string {
   return sql;
 };
 
-//Write a query to pull a tile's worth of MVT data from the relevant table
-
+/**
+ * Generates a SQL query to pull a tile's worth of MVT (Mapbox Vector Tiles) data from a specified table.
+ *
+ * @param tile - An object representing the tile's zoom level, x-coordinate, and y-coordinate.
+ * @param tab - An object representing the table's schema, table name, SRID, ID column, geometry column, and attribute columns.
+ * @returns The SQL query string that can be used to retrieve a tile's worth of MVT data from the specified table.
+ */
 const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
   const { schema, table, geomColumn, attrColumns, idColumn } = tab;
   const tileBounds = coordsToTileBounds(tile);
   const tileBoundsWithMargin = coordsToTileBounds(tile, 64 / 4096);
 
   const sql = `WITH mvtgeom as (
-      SELECT ST_AsMVTGeom(ST_Transform(t.${geomColumn}, 3857), ${tileBounds}, 4096, 64) as geom, ${attrColumns}, ${idColumn}
+      SELECT ST_AsMVTGeom(ST_Transform(t.${geomColumn}, 3857), ${tileBounds}, 4096, 64) as geom, ${attrColumns
+    .concat(idColumn)
+    .join(', ')}
       FROM ${schema}.${table} t
       WHERE ST_Transform(t.${geomColumn}, 3857) && ${tileBoundsWithMargin})
     SELECT ST_AsMVT(mvtgeom.*)
@@ -66,6 +79,13 @@ const boundsToSql = function (tile: Tile, tab: GeodataTableSpec) {
   return sql;
 };
 
+/**
+ * Executes a SQL query and returns the first row of the result.
+ *
+ * @param sql - The SQL query to execute.
+ * @param next - The NextFunction to handle errors.
+ * @returns The first row of the query result.
+ */
 const sqlToPbf = async (sql: string, next: NextFunction) => {
   const result = await query(sql);
 
@@ -80,6 +100,14 @@ const sqlToPbf = async (sql: string, next: NextFunction) => {
 
 /*================================= Main function definition here ======================================*/
 
+/**
+ * Retrieves vector tiles based on the provided table name, zoom level, and x/y coordinates.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @param next - The next function.
+ * @returns A Promise that resolves to the next function.
+ */
 controller.getVectorTilesForCoords = async function (
   req: Request,
   res: Response,
@@ -89,6 +117,7 @@ controller.getVectorTilesForCoords = async function (
   //Repackage as tile
   //Ensure all parameters exist
   const { tableid, z, y, x } = req.params;
+
   const tile: Tile = { zoom: Number(z), x: Number(x), y: Number(y) };
 
   if ([tableid, z, y, x].some((el) => !el)) {
@@ -114,8 +143,6 @@ controller.getVectorTilesForCoords = async function (
     );
   }
 
-  /*TODO: Refactor to eliminate switch statment / enable additional tables*/
-  //Select table details from above based on tableid
   let TABLE: string;
 
   try {

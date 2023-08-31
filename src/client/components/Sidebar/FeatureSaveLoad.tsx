@@ -12,6 +12,38 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/MapLayers';
 import { RootState } from '../../store/store';
 
+/**
+ * Creates a feature loader function that fetches feature data from a specific URL and adds the features to the `sources.geojsonHolder` object.
+ *
+ * @param id - The ID of the feature group to load.
+ * @returns A feature loader function.
+ */
+const makeLoadFeature = (id: number) => {
+  //const mapRef = map;
+
+  /**
+   * Fetches feature data from a specific URL and adds the features to the `sources.geojsonHolder` object.
+   *
+   * @returns None. The function performs a side effect by adding features to the `sources.geojsonHolder` object.
+   */
+  const featureLoader = (): void => {
+    fetch(`/layers/featuregroups/${id}`)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        const features = new GeoJSON().readFeatures(json);
+        features.forEach((f) => {
+          f.setId(f.get('id'));
+        });
+        /**@todo Refactor typing on LayerDefinitionSet to distinguish modifiable from unmodifiable elements */
+        //@ts-ignore
+        sources.geojsonHolder.addFeatures(features);
+      });
+  };
+
+  return featureLoader;
+};
+
 const FeatureSaveLoad = () => {
   const selection = useSelector((state: RootState) => state.mapSlice.selection);
   const map = useSelector((state: RootState) => state.mapSlice.map);
@@ -42,17 +74,28 @@ const FeatureSaveLoad = () => {
     }
   };
 
+  /**
+   * Saves the selected feature group by sending a POST request to the server with the necessary data.
+   * It then updates the list of saved feature groups and displays them on the UI.
+   *
+   * @async
+   * @returns {Promise<void>} - A promise that resolves once the feature group is saved and the UI is updated.
+   */
   const saveSelection = async () => {
+    if (!selection) return;
+    //Get layer and feature info for request
+
+    const { selectionLayerId, idField, selectionSet } = selection;
     const selectionLayer = map
       ?.getAllLayers()
       .filter(
         (layer) => layer.getProperties()['layerId'] == selectionLayerId
       )[0];
 
-    if (!selection || !selectionLayer) return;
-    //Get layer and feature info for request
+    if (!selectionLayer) return;
 
-    const { selectionLayerId, idField, selectionSet } = selection;
+    console.log('Printing selection layer properties...');
+    console.log(selectionLayer.getProperties());
 
     const sourceTableId = selectionLayer.get('sourceTableId');
 
@@ -104,27 +147,6 @@ const FeatureSaveLoad = () => {
       .catch((e) => {
         console.log(`Error: ${e}. Unable to complete feature group save.`);
       });
-  };
-
-  const makeLoadFeature = (id: number) => {
-    //const mapRef = map;
-
-    const featureLoader = () => {
-      fetch(`/layers/featuregroups/${id}`)
-        .then((response) => response.json())
-        .then((json) => {
-          console.log(json);
-          const features = new GeoJSON().readFeatures(json);
-          features.forEach((f) => {
-            f.setId(f.get('id'));
-          });
-          /**@todo Refactor typing on LayerDefinitionSet to distinguish modifiable from unmodifiable elements */
-          //@ts-ignore
-          sources.geojsonHolder.addFeatures(features);
-        });
-    };
-
-    return featureLoader;
   };
 
   const loadAllSaved = async () => {

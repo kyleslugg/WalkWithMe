@@ -32,8 +32,8 @@ routingController.generateRoute = async (
   //Pull edges from database
   console.log(req.body);
   const { geom, unit, dist } = req.body;
-  //const geometry = JSON.parse(geom).geometry;
-  const geometry = geom.geometry;
+  const geometry = JSON.parse(geom);
+  //const geometry = geom.geometry;
   const desiredDistance =
     (unit === 'mins' ? Number(dist) * 0.05 : Number(dist)) *
     1609.34 *
@@ -45,7 +45,7 @@ routingController.generateRoute = async (
     //TODO: Enable selection of table here based on layer displayed in frontend
     tableSpecs.TOPO_EDGES,
     1000000,
-    geometry.coordinates,
+    geometry.geometry.coordinates,
     desiredDistance
   );
 
@@ -70,11 +70,12 @@ routingController.generateRoute = async (
 
   console.log('Wrote data for routing to disk. Calling routing util...');
   //Execute pathfinding algorithm on input file created above
+
   const processOutput = await runPathFinder(
     resolvedFilePath!,
     Math.trunc(desiredDistance),
     //@ts-ignore
-    vertexToIndexMap.get(geom.properties.node_id),
+    vertexToIndexMap.get(geometry.properties.node_id),
     next
   );
 

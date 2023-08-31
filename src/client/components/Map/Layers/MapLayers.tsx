@@ -49,6 +49,18 @@ sources.nyccsl = new VectorTileSource({
     'Street centerlines by NYC OTI via <a href="https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b">NYC OpenData</a>'
 });
 
+sources.nyccsl_nodes = new VectorTileSource({
+  format: new MVT({ featureClass: Feature }),
+  url: '/layers/nyccsl_topo-node/{z}/{x}/{y}.mvt'
+});
+
+sources.nyccsl_edges = new VectorTileSource({
+  format: new MVT({ featureClass: Feature }),
+  url: '/layers/nyccsl_topo-edge_data/{z}/{x}/{y}.mvt',
+  attributions:
+    'Street centerlines by NYC OTI via <a href="https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b">NYC OpenData</a>'
+});
+
 sources.stamenTerrain = new XYZ({
   url: 'https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
   attributions: `Base map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.`
@@ -56,18 +68,25 @@ sources.stamenTerrain = new XYZ({
 
 //Define vector tile layer styles
 
-styles.edges = new Style({
+const default_linestyle = new Style({
   stroke: new Stroke({
     color: 'green',
-    width: 2
+    width: 3
   })
 });
 
-styles.nodes = new Style({
+const selected_linestyle = new Style({
+  stroke: new Stroke({
+    color: 'yellow',
+    width: 4
+  })
+});
+
+const default_nodestyle = new Style({
   image: new Circle({
     stroke: new Stroke({
       color: 'grey',
-      width: 1
+      width: 0.25
     }),
     fill: new Fill({
       color: 'blue'
@@ -76,21 +95,7 @@ styles.nodes = new Style({
   })
 });
 
-styles.nyccsl = new Style({
-  stroke: new Stroke({
-    color: 'green',
-    width: 4
-  })
-});
-
-styles.selectedLine = new Style({
-  stroke: new Stroke({
-    color: 'yellow',
-    width: 5
-  })
-});
-
-styles.selectedNode = new Style({
+const selected_nodestyle = new Style({
   image: new Circle({
     stroke: new Stroke({
       color: 'grey',
@@ -103,10 +108,20 @@ styles.selectedNode = new Style({
   })
 });
 
+styles.edges = default_linestyle;
+
+styles.nodes = default_nodestyle;
+
+styles.nyccsl = default_linestyle;
+
+styles.selectedLine = selected_linestyle;
+
+styles.selectedNode = selected_nodestyle;
+
 styles.loadedLine = new Style({
   stroke: new Stroke({
     color: 'purple',
-    width: 5
+    width: 4
   })
 });
 
@@ -149,18 +164,37 @@ const MapLayers = () => {
     />
   );
 
-  layers.nyccsl = (
+  layers.nyccsl_edges = (
     <VectorTileLayer
       map={map}
       key={layerIdGen()}
       layerId={layerIdGen()}
-      sourceTableId="nyccsl"
+      idField="edge_id"
+      sourceTableId="TOPO_EDGES"
       //@ts-ignore
-      source={sources.nyccsl}
+      source={sources.nyccsl_edges}
       style={styles.nyccsl}
       options={{ minZoom: 14, title: 'Street Centerlines' }}
     />
   );
+
+  layers.nyccsl_nodes = (
+    <VectorTileLayer
+      map={map}
+      key={layerIdGen()}
+      layerId={layerIdGen()}
+      idField="node_id"
+      sourceTableId="TOPO_NODES"
+      //@ts-ignore
+      source={sources.nyccsl_nodes}
+      style={styles.nodes}
+      options={{
+        minZoom: 14,
+        title: 'Street Centerline Nodes'
+      }}
+    />
+  );
+
   layers.stamenTerrain = (
     <TileLayer
       map={map}
@@ -175,7 +209,7 @@ const MapLayers = () => {
 
   //Taking out excess feature layers for tentative deployment
   //groups.featureLayers = [layers.nyccsl, layers.edges, layers.nodes];
-  groups.featureLayers = [layers.nyccsl];
+  groups.featureLayers = [layers.nyccsl_edges, layers.nyccsl_nodes];
 
   const theseLayers = [
     ...groups.basemaps,

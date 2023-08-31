@@ -62,3 +62,6 @@ Error. Corruption on line 3429. Edge {1245, 1306} is already defined. Exiting...
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000500	0.002670	2121	2166	0	0.002670
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000440	0.002891	2121	2166	0	0.002894
 /home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	1307	2120	178	2145	1	2	1	0	1	0	0	0	213	324	0	57	2121	2166	0.000475	0.002560	2121	2166	0	0.002560
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	123	177	22	536	1	2	1	0	1	0	0	0	14	15	0	7	519	590	0.000173	0.000376	519	590	0	0.000377
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	136	192	118	536	1	2	1	0	1	0	0	0	34	43	0	13	533	567	0.000245	0.000542	533	567	0	0.000543
+/home/kyle/Documents/Coding-Projects/WalkWithME/src/data/routingTopologies.txt	123	177	20	536	1	2	1	0	1	0	0	0	14	15	0	7	519	590	0.000107	0.000216	519	590	0	0.000217
