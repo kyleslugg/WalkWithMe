@@ -17,6 +17,8 @@ import {
 } from '../Map/Controls/Selector';
 import Feature, { FeatureLike } from 'ol/Feature';
 
+const loadWalkingPaths = () => {};
+
 const GenerateWalkingPath = () => {
   const { selection, map } = useSelector((state: RootState) => state.mapSlice);
   const [unit, setUnit] = useState<string>('mins');
