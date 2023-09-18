@@ -15,6 +15,8 @@ All geodata -- including prepackaged base maps from OpenStreetMap and custom vec
 
 #### Server Structure
 **Note: Migration to [RustyMVT](https://github.com/kyleslugg/RustyMVT) is in progress**
+
+
 The primary task of the WalkWithMe server is to, when provided with web map coordinates conformant to the [MapBox Vector Tile](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) specification, retrieve, process, and appropriately package underlying vector data for a particular area of the earth's surface. (In this application, the most relevant vector sources represent roads or other paths.) This is accomplished in three steps, contained within the `layerExtentsController` module:
 
 1. Coordinates representing the web map's zoom level and the local `x` and `y` position of the corresponding map tile are converted to absolute geographic coordinates in the WGS 84 Pseudo-Mercator projection, known colloquially as the "Web Mercator" projection. This is accomplished through a call to PostGIS' [ST_TileEnvelope](https://postgis.net/docs/en/ST_TileEnvelope.html) and ST_MakeEnvelope methods.
