@@ -182,7 +182,7 @@ export const runPathFinder = async (
   console.log(
     `${path.resolve(
       __dirname,
-      '../../../modules/'
+      '../../../modules/speedicycle/target/release'
     )}/speedicycle -i ${filePath} -t ${targetLength} -s ${sourceVertex}`
   );
 
