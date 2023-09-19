@@ -1,0 +1,3 @@
+[submodule "src/modules/speedicycle"]
+	path = src/modules/speedicycle
+	url = https://github.com/StrideStreets/speedicycle.git
