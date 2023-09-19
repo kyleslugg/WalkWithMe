@@ -101,7 +101,7 @@ routingController.generateRoute = async (
         })
       );
     }
-    res.locals.pathGeoms.push(geom);
+    res.locals.pathGeoms.features.push(geom);
   }
 
   return next();

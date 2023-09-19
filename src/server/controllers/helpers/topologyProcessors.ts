@@ -179,6 +179,12 @@ export const runPathFinder = async (
 
   //Execute pathfinder module from here
   //-a 3: selects algorithm to use. This uses the Double-Path Heuristic with filtering and selection of random remaining vertex at each stage
+  console.log(
+    `${path.resolve(
+      __dirname,
+      '../../../modules/'
+    )}/speedicycle -i ${filePath} -t ${targetLength} -s ${sourceVertex}`
+  );
 
   return exec(
     `${path.resolve(
@@ -208,7 +214,7 @@ export const readPathFinderResults = (
   try {
     const contents = fs
       .readFileSync(
-        path.resolve(__dirname, `../../../data/${rootFileName}_sol.txt`)
+        path.resolve(__dirname, `../../../data/${rootFileName}_sols.txt`)
       )
       .toString();
     //console.log(contents);

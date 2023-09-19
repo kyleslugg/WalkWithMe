@@ -72,7 +72,7 @@ const GenerateWalkingPath = () => {
       .then((resp) => {
         console.log(resp);
         //newWalkingPaths.concat(new GeoJSON().readFeatures(resp));
-        resp.forEach((el) => {
+        resp.features.forEach((el) => {
           console.log(el);
           const features = new GeoJSON().readFeatures(el);
           console.log(features);
