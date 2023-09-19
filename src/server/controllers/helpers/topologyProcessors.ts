@@ -33,7 +33,7 @@ export const getTopographicalData = async (
   let geomRestricter = '';
   if (startingGeom && desiredDistance) {
     geomRestricter = `WHERE ST_DWithin(t.${tableSpec.geomColumn}::geography, 
-      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), 4326)::geography, ${desiredDistance})`;
+      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), ${tableSpec.srid})::geography, ${desiredDistance})`;
   }
 
   /**Commenting this out for now to test a revised version that uses geography to handle meters conversion */

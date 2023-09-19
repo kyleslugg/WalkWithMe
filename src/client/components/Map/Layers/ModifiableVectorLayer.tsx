@@ -1,6 +1,6 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useEffect, FC } from 'react';
 import VectorLayer from 'ol/layer/Vector';
-import { FeatureSet, LayerProps } from '../../../../types';
+import { LayerProps } from '../../../../types';
 import VectorSource from 'ol/source/Vector.js';
 
 const ModVectorLayer: FC<LayerProps<VectorSource>> = ({

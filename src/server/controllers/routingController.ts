@@ -87,7 +87,7 @@ routingController.generateRoute = async (
     nodePairEdgeMapper
   );
 
-  res.locals.pathGeoms = []; //{ type: 'FeatureCollection', features: [] };
+  res.locals.pathGeoms = { type: 'FeatureCollection', features: [] };
   for (const path of pathOptionEdges) {
     //@ts-ignore
     const geom = await getPathGeometriesFromEdges(path, tableSpecs.TOPO_EDGES);
