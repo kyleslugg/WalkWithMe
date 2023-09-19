@@ -80,7 +80,7 @@ routingController.generateRoute = async (
     next
   );
 
-  const pathOptions = readPathFinderResults('routingTopologies.txt', next);
+  const pathOptions = readPathFinderResults('routingTopologies', next);
 
   const pathOptionEdges: (Number | undefined)[][] = pathFinderResultsToEdges(
     pathOptions,

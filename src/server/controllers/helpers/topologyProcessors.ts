@@ -183,8 +183,8 @@ export const runPathFinder = async (
   return exec(
     `${path.resolve(
       __dirname,
-      '../../../modules/kcircuit_router/'
-    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex}`
+      '../../../modules/'
+    )}/speedicycle -i ${filePath} -t ${targetLength} -s ${sourceVertex}`
   )
     .then((stdout) => {
       return stdout;
