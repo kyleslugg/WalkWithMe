@@ -1,6 +1,6 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useEffect, FC } from 'react';
 import VectorLayer from 'ol/layer/Vector';
-import { FeatureSet, LayerProps } from '../../../../types';
+import { LayerProps } from '../../../../types';
 import VectorSource from 'ol/source/Vector.js';
 
 const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
@@ -10,8 +10,6 @@ const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
   options,
   style
 }) => {
-  const [features, setFeatures] = useState<FeatureSet>({});
-
   const vlayer = new VectorLayer({
     ...options,
     style: style,
@@ -22,9 +20,9 @@ const ModVectorLayer: FC<LayerProps<VectorSource>> = ({
     if (!map) return;
 
     map.addLayer(vlayer);
-    source.on('addfeature', () => {
+    source?.on('change', () => {
       console.log('Layer source changed');
-
+      console.log(source?.getFeatures());
       vlayer.changed();
     });
   }, [map]);

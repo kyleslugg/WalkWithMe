@@ -1,16 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  DOMElement,
-  HTMLAttributes,
-  ReactNode
-} from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/MapLayers';
 import { RootState } from '../../store/store';
+import { setUserFeatures } from '../../store/slices/userFeatureSlice';
 
 /**
  * Creates a feature loader function that fetches feature data from a specific URL and adds the features to the `sources.geojsonHolder` object.
@@ -47,9 +42,9 @@ const makeLoadFeature = (id: number) => {
 const FeatureSaveLoad = () => {
   const selection = useSelector((state: RootState) => state.mapSlice.selection);
   const map = useSelector((state: RootState) => state.mapSlice.map);
-
-  //Establish state to save feature groups
-  const [savedGroups, setSavedGroups] = useState<Array<ReactNode | null>>([]);
+  const savedGroups = useSelector(
+    (state: RootState) => state.userFeatureSlice.userFeatures
+  );
 
   //Identify input elements
   const featureGroupNameInput: HTMLInputElement | null = document.querySelector(
@@ -139,7 +134,7 @@ const FeatureSaveLoad = () => {
           />
         );
         showSavedSection(true);
-        setSavedGroups(newSavedList);
+        setUserFeatures(newSavedList);
         if (addressInputForm) {
           addressInputForm.reset();
         }
@@ -169,7 +164,7 @@ const FeatureSaveLoad = () => {
         }
         console.log('Features loaded');
         //showSavedSection(true);
-        setSavedGroups(newSavedList);
+        setUserFeatures(newSavedList);
       });
   };
 

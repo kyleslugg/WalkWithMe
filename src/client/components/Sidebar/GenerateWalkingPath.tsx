@@ -11,14 +11,16 @@ import SavedFeatureGroup from '../Map/Layers/SavedFeatureGroup';
 import layerIdGen from '../Map/Layers/layerIdGen';
 import GeoJSON from 'ol/format/GeoJSON';
 import { sources } from '../Map/Layers/MapLayers';
-import {
-  getSelectedFeaturesAndLayer,
-  clearCurrentSelection
-} from '../Map/Controls/Selector';
+import { getSelectedFeaturesAndLayer } from '../Map/Controls/Selector';
 import Feature, { FeatureLike } from 'ol/Feature';
+import { setWalkingPaths } from '../../store/slices/userFeatureSlice';
+import { uuidv4 } from '../../../utils';
 
 const GenerateWalkingPath = () => {
   const { selection, map } = useSelector((state: RootState) => state.mapSlice);
+  const { walkingPaths } = useSelector(
+    (state: RootState) => state.userFeatureSlice
+  );
   const [unit, setUnit] = useState<string>('mins');
 
   //Identify fields
@@ -59,13 +61,34 @@ const GenerateWalkingPath = () => {
 
     const dist = distInput?.value;
 
+    const newWalkingPaths = [...walkingPaths];
+
     fetch('/routes', {
       method: 'POST',
       body: JSON.stringify({ geom: json, unit, dist }),
       headers: { 'Content-Type': 'application/json' }
-    }).then((resp) => {
-      console.log(resp);
-    });
+    })
+      .then((resp) => resp.json())
+      .then((resp) => {
+        console.log(resp);
+        //newWalkingPaths.concat(new GeoJSON().readFeatures(resp));
+        resp.features.forEach((el) => {
+          console.log(el);
+          const features = new GeoJSON().readFeatures(el);
+          console.log(features);
+          features.forEach((f) => {
+            f.setId(uuidv4());
+          });
+          newWalkingPaths.push(...features);
+        });
+
+        //loadWalkingPaths(el.geoms);
+        console.log(newWalkingPaths);
+        setWalkingPaths(newWalkingPaths);
+        sources.geojsonHolder.clear();
+        //@ts-expect-error
+        sources.geojsonHolder.addFeatures(newWalkingPaths);
+      });
   };
 
   return (

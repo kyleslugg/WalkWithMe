@@ -33,7 +33,7 @@ export const getTopographicalData = async (
   let geomRestricter = '';
   if (startingGeom && desiredDistance) {
     geomRestricter = `WHERE ST_DWithin(t.${tableSpec.geomColumn}::geography, 
-      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), 4326)::geography, ${desiredDistance})`;
+      ST_Transform(ST_SetSRID(ST_MakePoint(${startingGeom[0]}, ${startingGeom[1]}), 3857), ${tableSpec.srid})::geography, ${desiredDistance})`;
   }
 
   /**Commenting this out for now to test a revised version that uses geography to handle meters conversion */
@@ -179,12 +179,18 @@ export const runPathFinder = async (
 
   //Execute pathfinder module from here
   //-a 3: selects algorithm to use. This uses the Double-Path Heuristic with filtering and selection of random remaining vertex at each stage
+  console.log(
+    `${path.resolve(
+      __dirname,
+      '../../../modules/'
+    )}/speedicycle -i ${filePath} -t ${targetLength} -s ${sourceVertex}`
+  );
 
   return exec(
     `${path.resolve(
       __dirname,
-      '../../../modules/kcircuit_router/'
-    )}/kcircuit -i ${filePath} -k ${targetLength} -s ${sourceVertex}`
+      '../../../modules/'
+    )}/speedicycle -i ${filePath} -t ${targetLength} -s ${sourceVertex}`
   )
     .then((stdout) => {
       return stdout;
@@ -208,7 +214,7 @@ export const readPathFinderResults = (
   try {
     const contents = fs
       .readFileSync(
-        path.resolve(__dirname, `../../../data/${rootFileName}_sol.txt`)
+        path.resolve(__dirname, `../../../data/${rootFileName}_sols.txt`)
       )
       .toString();
     //console.log(contents);
@@ -271,8 +277,13 @@ export const getPathGeometriesFromEdges = async (
     ) c;`;
 
   console.log(fgQuery);
-  const results = await query(fgQuery);
+  let results;
 
-  //@ts-ignore
-  return results.rows[0];
+  try {
+    results = await query(fgQuery);
+    //@ts-ignore
+    return results.rows[0].geoms;
+  } catch {
+    return new Error('Failed to complete feature query');
+  }
 };

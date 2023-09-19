@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import mapSlice from './slices/mapSlice';
+import userFeatureSlice from './slices/userFeatureSlice';
 
 export const store = configureStore({
   reducer: {
-    mapSlice: mapSlice
+    mapSlice: mapSlice,
+    userFeatureSlice: userFeatureSlice
   }
 });
 

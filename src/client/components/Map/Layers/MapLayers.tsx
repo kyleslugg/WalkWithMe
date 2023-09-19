@@ -136,7 +136,7 @@ const MapLayers = () => {
       modLayerInd={true}
       source={sources.geojsonHolder}
       style={styles.loadedLine}
-      options={{ visible: false, title: 'User Feature Groups' }}
+      options={{ title: 'User Feature Groups' }}
     />
   );
 
