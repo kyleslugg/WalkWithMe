@@ -4,6 +4,9 @@
 
 WalkWithMe is a route planner based on [POSTGIS](https://postgis.net/) and [OpenLayers](https://openlayers.org/) that is tailored to neighborhood walking paths. Coverage is currently limited to New York City, but can be expanded to additional locations with the use of OpenStreetMap feature extracts and/or locally maintained street grid geodata.
 
+### The Latest:
+__Walk routing is available now__. To use, please pass the `--recurse-submodules` flag when cloning this repository, which will load the [Speedicycle](https://github.com/StrideStreets/speedicycle) binary (and source code, for optional experimentation). The component for saving user-defined paths has been removed temporarily in preparation for an upcoming release, but can be included with alterations to the component tree in `App.tsx` and will be restored in coming releases.
+
 ## Overview
 
 <img align="right" src="assets/frontend.png" height="400px">
@@ -16,7 +19,6 @@ All geodata -- including prepackaged base maps from OpenStreetMap and custom vec
 #### Server Structure
 **Note: Migration to [RustyMVT](https://github.com/kyleslugg/RustyMVT) is in progress**
 
-
 The primary task of the WalkWithMe server is to, when provided with web map coordinates conformant to the [MapBox Vector Tile](https://docs.mapbox.com/data/tilesets/guides/vector-tiles-introduction/) specification, retrieve, process, and appropriately package underlying vector data for a particular area of the earth's surface. (In this application, the most relevant vector sources represent roads or other paths.) This is accomplished in three steps, contained within the `layerExtentsController` module:
 
 1. Coordinates representing the web map's zoom level and the local `x` and `y` position of the corresponding map tile are converted to absolute geographic coordinates in the WGS 84 Pseudo-Mercator projection, known colloquially as the "Web Mercator" projection. This is accomplished through a call to PostGIS' [ST_TileEnvelope](https://postgis.net/docs/en/ST_TileEnvelope.html) and ST_MakeEnvelope methods.
@@ -24,6 +26,15 @@ The primary task of the WalkWithMe server is to, when provided with web map coor
 3. Results of this query are packaged as a ProtoBuf for easy transfer to the frontend, where they are consumed by OpenLayers' Vector Tile API.
 
 Saving and retrieval of user-defined feature groups is handled through more conventional means, using the GeoJSON specification.
+
+The generation of fixed-length walking routes from a node selected on the frontend is handled through the `routingController` module and subroutines, which function by:
+1. Retrieving streets as nodes and edges within a certain distance of the starting node from the PostGIS database;
+2. Processing those features into the DIMACS format required by Speedicycle;
+3. Calling the Speedicycle binary; and
+4. Processing the resulting path into a set of GeoJSON features using PostGIS.
+
+The resulting features are then loaded on the frontend, in the same manner as user-defined features.
+
 
 #### PostGIS Setup
 
@@ -38,9 +49,15 @@ While a more detailed guide to database setup is in the works, major points to n
 
 ### Development Roadmap
 
-As noted above, at present, users may plot intended walking routes using their preferred source of street grid data, then save and load the resulting feature groups with basic identifying information.
+As noted above, the selection, saving, and loading of user-defined paths has been removed temporarily in favor of the autorouting component in preparation for an upcoming UI redesign. This functionality will be restored in coming releases.
 
-The next installment of this tool will feature automated creation of walking paths given a specified length (or, through conversion, intended completion time). The underlying routing algorithm is already under development, and owes an enormous debt of gratitude to [the work of Drs. Robert Lewis and Padraig Corcoran](https://ideas.repec.org/a/spr/joheur/v28y2022i3d10.1007_s10732-022-09493-5.html) on heuristics for the construction of fixed-length circuits through weighted graphs such as those constructed from street networks. Expect updates in the coming weeks and months.
+Up next is:
+1. The deployment of a sample database and frontend using NYC Street Centerlines. The present version will be deployed first, followed by the updated UI when ready.
+2. Replacement of the current TypeScript backend with my Rust-based map vector tile server [RustyMVT](https://github.com/kyleslugg/RustyMVT), to improve performance and integration with Speedicycle.
+3. Elimination of the disk IO operations associated with routing calls, in tandem with the development of additional IO formats in Speedicycle.
+
+Within the next month, ownership of this project may be transferred to (or shared with) Stride, the organization that I have created to centralize my geospatial tooling. Additional updates to come.
+
 
 ### In Conclusion...
 
