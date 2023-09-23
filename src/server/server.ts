@@ -1,14 +1,18 @@
+import dotenv from 'dotenv';
 import { join } from 'path';
 import express, { Request, Response, NextFunction, Router } from 'express';
 import layersRouter from './routes/layersRouter.js';
 import geocodeRouter from './routes/geocodeRouter.js';
 import routingRouter from './routes/routingRouter.js';
-import dotenv from 'dotenv';
+
+import connectDbByString from './models/db_connector.js';
 import * as url from 'url';
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+console.log(dotenv.config());
 
-dotenv.config();
+export const connectionPool = connectDbByString(process.env.PG_STRING!);
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const app = express();
 
